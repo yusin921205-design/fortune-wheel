@@ -23,7 +23,7 @@ h1{
   margin:40px auto;
 }
 
-/* 轉盤 */
+/* ⭐ 轉盤 */
 .wheel{
   width:320px;
   height:320px;
@@ -44,7 +44,7 @@ h1{
   z-index:1;
 }
 
-/* ⭐ 文字改成真正「貼扇形」 */
+/* ⭐ 文字（真正貼圓） */
 .labels{
   position:absolute;
   width:320px;
@@ -64,12 +64,9 @@ h1{
   font-size:13px;
   font-weight:bold;
   color:#333;
-
-  /* ⭐ 關鍵：讓字沿半徑方向 */
-  transform-origin:center;
 }
 
-/* ⭐ 指針（真正圓心固定） */
+/* ⭐ 指針（圓心固定） */
 .pointer{
   position:absolute;
   left:50%;
@@ -96,10 +93,6 @@ h1{
   left:50%;
   top:-160px;
   transform:translateX(-50%);
-
-  width:0;
-  height:0;
-
   border-left:10px solid transparent;
   border-right:10px solid transparent;
   border-bottom:20px solid #ff4f8b;
@@ -113,6 +106,7 @@ button{
   background:#ff4f8b;
   color:white;
   font-size:16px;
+  cursor:pointer;
 }
 
 .result{
@@ -157,15 +151,15 @@ const wheel = document.getElementById("wheel");
 
 const angle = 360 / results.length;
 
-/* ⭐ 正確扇形文字 */
+/* ⭐ 建立「真正對應扇形」文字 */
 results.forEach((text, i) => {
 
 let div = document.createElement("div");
 div.className = "label";
 
-/* ⭐ 關鍵修正：貼扇形角度 */
+/* ⭐ 正確貼圓方式 */
 div.style.transform =
-"rotate(" + (i * angle + angle/2) + "deg) translateY(-120px) rotate(90deg)";
+"rotate(" + (i * angle + angle/2) + "deg) translateY(-120px)";
 
 div.innerHTML = text;
 
@@ -175,16 +169,20 @@ labels.appendChild(div);
 
 let spinning = false;
 let rotation = 0;
+let currentIndex = 0;
 
 function spin(){
 
 if(spinning) return;
 spinning = true;
 
-let index = Math.floor(Math.random() * results.length);
+/* ⭐ 同時決定「轉盤 + 結果」 */
+currentIndex = Math.floor(Math.random() * results.length);
+
 let slice = 360 / results.length;
 
-let target = 360 * 3 - (index * slice + slice/2);
+/* ⭐ 對準該格 */
+let target = 360 * 3 - (currentIndex * slice + slice/2);
 
 rotation += target;
 
@@ -193,7 +191,7 @@ wheel.style.transform = "rotate(" + rotation + "deg)";
 setTimeout(() => {
 
 document.getElementById("result").innerHTML =
-"今日運勢：" + results[index];
+"今日運勢：" + results[currentIndex];
 
 spinning = false;
 
