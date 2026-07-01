@@ -56,11 +56,10 @@ h1{
   position:absolute;
   left:50%;
   top:50%;
-  font-size:14px;
+  font-size:13px;
   font-weight:bold;
   color:#333;
   white-space:nowrap;
-  transform-origin:center;
 }
 
 /* 指針 */
@@ -151,8 +150,8 @@ let angle = 360 / size;
 let rotation = 0;
 let spinning = false;
 
-/* ✔ 統一半徑 + 平均角度（重點修正） */
-const radius = 92; // ⭐ 這裡控制「字往圓心距離」
+/* ✔ 關鍵：限制在扇形內（不超出圓） */
+const radius = 78;  // ⭐ 這裡是重點：不靠邊、不靠中心
 
 for(let i = 0; i < size; i++){
 
@@ -162,7 +161,7 @@ for(let i = 0; i < size; i++){
   div.className = "label";
   div.innerText = results[i];
 
-  /* ✔ 標準圓形定位（整齊版） */
+  /* ✔ 安全扇形內定位 */
   div.style.transform =
     `rotate(${deg}deg)
      translate(${radius}px)
