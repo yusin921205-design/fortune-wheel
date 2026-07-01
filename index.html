@@ -24,7 +24,6 @@ h1{
   margin:40px auto;
 }
 
-/* 輪盤 */
 .wheel{
   width:100%;
   height:100%;
@@ -42,7 +41,6 @@ h1{
   );
 }
 
-/* 字整層（像貼紙） */
 .labels{
   position:absolute;
   width:100%;
@@ -51,12 +49,10 @@ h1{
   pointer-events:none;
 }
 
-/* 單一文字 */
 .label{
   position:absolute;
   left:50%;
   top:50%;
-  transform-origin:center;
   font-size:14px;
   font-weight:bold;
   color:#333;
@@ -151,8 +147,8 @@ let angle = 360 / size;
 let rotation = 0;
 let spinning = false;
 
-/* ✔ 固定半徑（貼在輪盤上） */
-const radius = 110;
+/* ⭐ 核心：圓心等角度 + 等半徑 */
+const radius = 95; // 控制不要超出圓（關鍵）
 
 for(let i = 0; i < size; i++){
 
@@ -162,14 +158,19 @@ for(let i = 0; i < size; i++){
   div.className = "label";
   div.innerText = results[i];
 
-  /* ✔ 只做一次定位（像印在輪盤） */
+  /* ✔ 等角散開 + 固定半徑 */
+  let rad = deg * Math.PI / 180;
+
+  let x = Math.cos(rad) * radius;
+  let y = Math.sin(rad) * radius;
+
   div.style.transform =
-    `rotate(${deg}deg) translate(${radius}px)`;
+    `translate(${x}px, ${y}px) translate(-50%, -50%)`;
 
   labels.appendChild(div);
 }
 
-/* ✔ 剛體旋轉（核心） */
+/* 轉動 */
 function spin(){
 
 if(spinning) return;
@@ -178,7 +179,6 @@ spinning = true;
 let spins = 5 * 360;
 rotation += spins + Math.floor(Math.random()*360);
 
-/* ⭐ 重點：整體一起轉 */
 wheel.style.transform = `rotate(${rotation}deg)`;
 labels.style.transform = `rotate(${rotation}deg)`;
 
