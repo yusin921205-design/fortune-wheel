@@ -23,7 +23,7 @@ h1{
   margin:40px auto;
 }
 
-/* ⭐ 轉盤 */
+/* 轉盤 */
 .wheel{
   width:320px;
   height:320px;
@@ -44,7 +44,7 @@ h1{
   z-index:1;
 }
 
-/* ⭐ 文字層 */
+/* ⭐ 文字改成真正「貼扇形」 */
 .labels{
   position:absolute;
   width:320px;
@@ -52,7 +52,6 @@ h1{
   top:0;
   left:0;
   z-index:2;
-  pointer-events:none;
 }
 
 .label{
@@ -61,13 +60,16 @@ h1{
   height:100%;
   display:flex;
   justify-content:center;
-  align-items:center;
+  align-items:flex-start;
   font-size:13px;
   font-weight:bold;
   color:#333;
+
+  /* ⭐ 關鍵：讓字沿半徑方向 */
+  transform-origin:center;
 }
 
-/* ⭐ 指針（已修正：真正圓心） */
+/* ⭐ 指針（真正圓心固定） */
 .pointer{
   position:absolute;
   left:50%;
@@ -76,7 +78,6 @@ h1{
   z-index:10;
 }
 
-/* 中心點 */
 .pointer::before{
   content:"";
   width:18px;
@@ -89,7 +90,6 @@ h1{
   transform:translate(-50%, -50%);
 }
 
-/* 尖端朝外 */
 .pointer::after{
   content:"";
   position:absolute;
@@ -105,7 +105,6 @@ h1{
   border-bottom:20px solid #ff4f8b;
 }
 
-/* 按鈕 */
 button{
   margin-top:20px;
   padding:12px 25px;
@@ -114,7 +113,6 @@ button{
   background:#ff4f8b;
   color:white;
   font-size:16px;
-  cursor:pointer;
 }
 
 .result{
@@ -159,14 +157,15 @@ const wheel = document.getElementById("wheel");
 
 const angle = 360 / results.length;
 
-/* ⭐ 產生文字 */
+/* ⭐ 正確扇形文字 */
 results.forEach((text, i) => {
 
 let div = document.createElement("div");
 div.className = "label";
 
+/* ⭐ 關鍵修正：貼扇形角度 */
 div.style.transform =
-"rotate(" + (i * angle + angle/2) + "deg) translateY(-120px)";
+"rotate(" + (i * angle + angle/2) + "deg) translateY(-120px) rotate(90deg)";
 
 div.innerHTML = text;
 
