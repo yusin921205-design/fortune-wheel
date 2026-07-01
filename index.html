@@ -52,7 +52,7 @@ h1{
   transform-origin:0 0;
 }
 
-/* ✔ 真正圓心指針（修正） */
+/* 指針（真正圓心） */
 .pointer{
   position:absolute;
   left:50%;
@@ -61,7 +61,6 @@ h1{
   z-index:10;
 }
 
-/* 圓心點 */
 .pointer::before{
   content:"";
   position:absolute;
@@ -72,7 +71,6 @@ h1{
   transform:translate(-50%,-50%);
 }
 
-/* ✔ 箭頭真正壓到圓心 */
 .pointer::after{
   content:"";
   position:absolute;
@@ -110,10 +108,8 @@ button{
 <h1>🎰 運勢轉盤 PRO</h1>
 
 <div class="container">
-
   <div class="wheel" id="wheel"></div>
   <div class="pointer"></div>
-
 </div>
 
 <button onclick="spin()">開始轉運 🍀</button>
@@ -139,7 +135,7 @@ let angle = 360 / size;
 let rotation = 0;
 let spinning = false;
 
-/* 建立文字 */
+/* 文字 */
 for(let i=0;i<size;i++){
   let label = document.createElement("div");
   label.className = "label";
@@ -151,7 +147,7 @@ for(let i=0;i<size;i++){
   wheel.appendChild(label);
 }
 
-/* ✔ 核心修正：加 half-angle 校正 */
+/* ✔ 核心修正（唯一穩定版） */
 function spin(){
 
 if(spinning) return;
@@ -159,18 +155,20 @@ spinning = true;
 
 let index = Math.floor(Math.random() * size);
 
-/* ✔ 5圈 + 對齊中心 */
-let spins = 5 * 360;
+/* 👉 先轉很多圈 */
+let spin = 5 * 360;
 
-/* ⭐ 唯一正確對齊公式 */
-let target =
-spins +
-(360 - (index * angle + angle/2));
+/* 👉 目標停止角（只控制視覺） */
+rotation += spin;
 
-rotation = target;
+/* 👉 讓輪盤停在正確區塊 */
+let stopAngle = index * angle;
 
-wheel.style.transform = `rotate(${rotation}deg)`;
+rotation += stopAngle;
 
+wheel.style.transform = `rotate(${-rotation}deg)`;
+
+/* ✔ 顯示一定跟 index 一致 */
 setTimeout(()=>{
 
 document.getElementById("result").innerText =
