@@ -150,8 +150,8 @@ let angle = 360 / size;
 let rotation = 0;
 let spinning = false;
 
-/* ✔ 關鍵：限制在扇形內（不超出圓） */
-const radius = 78;  // ⭐ 這裡是重點：不靠邊、不靠中心
+/* ⭐ 穩定核心：固定角度 + 固定半徑 */
+const radius = 88; // ✔ 平衡點：不太外、不太內
 
 for(let i = 0; i < size; i++){
 
@@ -161,11 +161,14 @@ for(let i = 0; i < size; i++){
   div.className = "label";
   div.innerText = results[i];
 
-  /* ✔ 安全扇形內定位 */
+  /* ✔ 正確穩定定位（不歪、不亂） */
+  let rad = deg * Math.PI / 180;
+
+  let x = Math.cos(rad) * radius;
+  let y = Math.sin(rad) * radius;
+
   div.style.transform =
-    `rotate(${deg}deg)
-     translate(${radius}px)
-     translate(-50%, -50%)`;
+    `translate(${x}px, ${y}px) translate(-50%, -50%)`;
 
   labels.appendChild(div);
 }
