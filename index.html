@@ -23,7 +23,7 @@ h1{
   margin:40px auto;
 }
 
-/* 轉盤 */
+/* ⭐ 你原本正確的圓盤（保留） */
 .wheel{
   width:320px;
   height:320px;
@@ -40,40 +40,18 @@ h1{
   transition: transform 3s cubic-bezier(.2,.8,.2,1);
 }
 
-/* ⭐ 正確指針：中間小三角 + 軸心 */
+/* ⭐ 正確指針（修正版，不破壞圓盤） */
 .pointer{
   position:absolute;
   left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  z-index:10;
-}
-
-/* 中心點 */
-.pointer::before{
-  content:"";
-  width:18px;
-  height:18px;
-  background:#ff4f8b;
-  border-radius:50%;
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-}
-
-/* 指向標記（短三角） */
-.pointer::after{
-  content:"";
-  position:absolute;
-  left:50%;
-  top:-110px;
+  top:-10px;
   transform:translateX(-50%);
   width:0;
   height:0;
-  border-left:10px solid transparent;
-  border-right:10px solid transparent;
+  border-left:12px solid transparent;
+  border-right:12px solid transparent;
   border-bottom:20px solid #ff4f8b;
+  z-index:10;
 }
 
 /* 按鈕 */
@@ -100,10 +78,11 @@ button{
 
 <div class="container">
 
-  <div class="wheel" id="wheel"></div>
-
-  <!-- ⭐ 正確中心指針 -->
+  <!-- ⭐ 指針（修好） -->
   <div class="pointer"></div>
+
+  <!-- ⭐ 圓盤（你原本正確版本） -->
+  <div class="wheel" id="wheel"></div>
 
 </div>
 
@@ -134,7 +113,8 @@ spinning = true;
 let index = Math.floor(Math.random() * results.length);
 let slice = 360 / results.length;
 
-let target = 360 * 3 - (index * slice + slice/2);
+/* ⭐ 對準指針（上方） */
+let target = 360 * 3 - (index * slice + slice / 2);
 
 rotation += target;
 
