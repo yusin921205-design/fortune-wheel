@@ -16,7 +16,7 @@ h1{
   color:#ff4f8b;
 }
 
-/* ⭐ 關鍵修正：一定要讓子元素以這個為中心 */
+/* ⭐ 容器 */
 .container{
   position:relative;
   width:320px;
@@ -24,7 +24,7 @@ h1{
   margin:40px auto;
 }
 
-/* 轉盤 */
+/* ⭐ 轉盤 */
 .wheel{
   width:320px;
   height:320px;
@@ -42,17 +42,21 @@ h1{
   position:absolute;
   top:0;
   left:0;
+  z-index:1;
 }
 
-/* 文字 */
+/* ⭐ 文字層（修好：不會消失） */
 .labels{
   position:absolute;
   width:320px;
   height:320px;
   top:0;
   left:0;
+  z-index:2;
+  pointer-events:none;
 }
 
+/* 單一文字 */
 .label{
   position:absolute;
   width:100%;
@@ -65,15 +69,12 @@ h1{
   color:#333;
 }
 
-/* ⭐ 指針（真正修好版本） */
+/* ⭐ 指針（圓心版本） */
 .pointer{
   position:absolute;
-
-  /* ⭐ 這兩個才是真正中心 */
   left:50%;
   top:50%;
   transform:translate(-50%, -50%);
-
   z-index:10;
 }
 
@@ -103,10 +104,10 @@ h1{
 
   border-left:10px solid transparent;
   border-right:10px solid transparent;
-
   border-bottom:20px solid #ff4f8b;
 }
 
+/* 按鈕 */
 button{
   margin-top:20px;
   padding:12px 25px;
@@ -115,6 +116,7 @@ button{
   background:#ff4f8b;
   color:white;
   font-size:16px;
+  cursor:pointer;
 }
 
 .result{
@@ -154,6 +156,7 @@ const results = [
 "⚡ 凶"
 ];
 
+/* ⭐ 建立文字 */
 const labels = document.getElementById("labels");
 const angle = 360 / results.length;
 
@@ -162,10 +165,9 @@ results.forEach((text, i) => {
 let div = document.createElement("div");
 div.className = "label";
 
-div.style.transform = `
-rotate(${i * angle + angle/2}deg)
-translateY(-120px)
-`;
+/* ⭐ 穩定版本（不會亂掉） */
+div.style.transform =
+"rotate(" + (i * angle + angle/2) + "deg) translateY(-120px)";
 
 div.innerHTML = text;
 
