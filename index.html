@@ -24,7 +24,7 @@ h1{
   margin:40px auto;
 }
 
-/* ✔ 轉盤 */
+/* 轉盤 */
 .wheel{
   width:100%;
   height:100%;
@@ -42,18 +42,27 @@ h1{
   );
 }
 
-/* ✔ 指針（完全固定圓心） */
+/* ⭐ 文字（補回來 + 提高層級） */
+.label{
+  position:absolute;
+  left:50%;
+  top:50%;
+  font-size:14px;
+  font-weight:bold;
+  color:#333;
+  transform-origin:0 0;
+  z-index:2;
+}
+
+/* 指針 */
 .pointer{
   position:absolute;
   left:50%;
   top:50%;
   transform:translate(-50%,-50%);
-  width:0;
-  height:0;
   z-index:10;
 }
 
-/* 圓心點 */
 .pointer::before{
   content:"";
   position:absolute;
@@ -64,7 +73,6 @@ h1{
   transform:translate(-50%,-50%);
 }
 
-/* 箭頭（真正從中心長出） */
 .pointer::after{
   content:"";
   position:absolute;
@@ -127,21 +135,34 @@ const wheel = document.getElementById("wheel");
 let size = results.length;
 let angle = 360 / size;
 
-/* ✔ 固定起始角（關鍵修正） */
-let baseOffset = -angle / 2;
-
-/* ✔ rotation 累加 */
 let rotation = 0;
 let spinning = false;
 
-/* ✔ 用「真角度」算 index（完全穩） */
+/* ⭐ 補回文字（你剛剛消失的原因就在這） */
+function buildText(){
+
+for(let i=0;i<size;i++){
+
+let label = document.createElement("div");
+label.className = "label";
+label.innerText = results[i];
+
+label.style.transform =
+`rotate(${i * angle + angle/2}deg) translate(95px)`;
+
+wheel.appendChild(label);
+
+}
+
+}
+
+buildText();
+
+/* ✔ 穩定對齊 */
 function getIndex(rot){
 
 let normalized = (rot % 360 + 360) % 360;
-
-/* 對齊起始 offset */
-let adjusted = (normalized - baseOffset + 360) % 360;
-
+let adjusted = (normalized + angle/2) % 360;
 return Math.floor(adjusted / angle);
 
 }
@@ -151,19 +172,14 @@ function spin(){
 if(spinning) return;
 spinning = true;
 
-/* 轉多圈 */
+/* ✔ 一定超過一圈 */
 let spins = 5 * 360;
 
-/* 隨機停止角 */
-let random = Math.floor(Math.random() * 360);
+/* ✔ 隨機停止 */
+rotation += spins + Math.floor(Math.random()*360);
 
-/* ✔ 累加 */
-rotation += spins + random;
-
-/* 轉盤 */
 wheel.style.transform = `rotate(${rotation}deg)`;
 
-/* ✔ 用畫面反推結果 */
 setTimeout(()=>{
 
 let index = getIndex(rotation);
