@@ -22,7 +22,7 @@ h1{
   margin:40px auto;
 }
 
-/* ⭐ 指針（已修正方向） */
+/* 指針 */
 .pointer{
   width:0;
   height:0;
@@ -30,7 +30,6 @@ h1{
   border-left:15px solid transparent;
   border-right:15px solid transparent;
 
-  /* 👉 改成往下指（指向轉盤） */
   border-top:25px solid #ff4f8b;
 
   position:absolute;
@@ -66,7 +65,6 @@ button{
   background:#ff4f8b;
   color:white;
   font-size:16px;
-  cursor:pointer;
 }
 
 .result{
@@ -111,11 +109,11 @@ spinning = true;
 
 let index = Math.floor(Math.random() * results.length);
 
-/* 每一格角度 */
+/* 每一格 360/7 */
 let slice = 360 / results.length;
 
-/* 讓結果對準指針 */
-let target = 360 * 3 - (index * slice + slice / 2);
+/* 指到中間 */
+let target = 360 * 3 - (index * slice + slice/2);
 
 rotation += target;
 
