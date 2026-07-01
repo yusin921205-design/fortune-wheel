@@ -64,7 +64,6 @@ h1{
 }
 
 
-/* 文字位置 */
 .text span{
 
   position:absolute;
@@ -79,7 +78,8 @@ h1{
 
 
 
-/* 指針 */
+/* ===== 修正後指針 ===== */
+
 .pointer{
 
   position:absolute;
@@ -89,10 +89,12 @@ h1{
 
   transform:translate(-50%,-50%);
 
-  z-index:5;
+  z-index:10;
 
 }
 
+
+/* 圓心 */
 
 .pointer:before{
 
@@ -100,17 +102,23 @@ h1{
 
   position:absolute;
 
-  width:18px;
-  height:18px;
+  width:20px;
+  height:20px;
 
   background:#ff4f8b;
 
   border-radius:50%;
 
+  left:0;
+  top:0;
+
   transform:translate(-50%,-50%);
 
 }
 
+
+
+/* 箭頭往外 */
 
 .pointer:after{
 
@@ -118,15 +126,18 @@ h1{
 
   position:absolute;
 
-  left:-10px;
+  left:-12px;
 
   top:-150px;
 
+  width:0;
+  height:0;
 
-  border-left:10px solid transparent;
-  border-right:10px solid transparent;
+  border-left:12px solid transparent;
 
-  border-bottom:25px solid #ff4f8b;
+  border-right:12px solid transparent;
+
+  border-bottom:30px solid #ff4f8b;
 
 }
 
