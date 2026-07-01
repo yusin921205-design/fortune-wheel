@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>運勢轉盤 PRO</title>
+<title>運勢輪盤</title>
 
 <style>
 
@@ -57,9 +57,13 @@ h1{
   font-weight:bold;
   color:#333;
   transform-origin:0 0;
+
+  /* ✔ 修正：讓字「貼扇形走」 */
+  text-align:center;
+  white-space:nowrap;
 }
 
-/* ✔ 箭頭修正：真正回圓心 */
+/* 指針 */
 .pointer{
   position:absolute;
   left:50%;
@@ -78,7 +82,6 @@ h1{
   transform:translate(-50%,-50%);
 }
 
-/* ✔ 修正跑掉：改回穩定圓心定位 */
 .pointer::after{
   content:"";
   position:absolute;
@@ -113,7 +116,7 @@ button{
 
 <body>
 
-<h1>🎰 運勢轉盤 PRO</h1>
+<h1>🎰 運勢輪盤</h1>
 
 <div class="container">
   <div class="wheel" id="wheel"></div>
@@ -146,14 +149,14 @@ let angle = 360 / size;
 let rotation = 0;
 let spinning = false;
 
-/* 文字 */
+/* ✔ 文字貼扇形修正版 */
 for(let i=0;i<size;i++){
   let div = document.createElement("div");
   div.className = "label";
   div.innerText = results[i];
 
   div.style.transform =
-    `rotate(${i * angle + angle/2}deg) translate(95px)`;
+    `rotate(${i * angle + angle/2}deg) translate(110px) rotate(${-(i * angle + angle/2)}deg)`;
 
   labels.appendChild(div);
 }
@@ -179,7 +182,6 @@ setTimeout(()=>{
 
 let index = getIndex(rotation);
 
-/* ✔ 這裡改文字 */
 document.getElementById("result").innerText =
 "純屬好玩，祝福你今天有美好的一天";
 
