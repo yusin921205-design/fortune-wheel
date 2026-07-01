@@ -24,6 +24,7 @@ h1{
   margin:40px auto;
 }
 
+/* 轉盤 */
 .wheel{
   width:100%;
   height:100%;
@@ -41,7 +42,7 @@ h1{
   );
 }
 
-/* ⭐ 文字層 */
+/* 文字層 */
 .labels{
   position:absolute;
   width:100%;
@@ -50,7 +51,7 @@ h1{
   pointer-events:none;
 }
 
-/* ⭐ 文字本體 */
+/* ✔ 文字穩定 */
 .label{
   position:absolute;
   left:50%;
@@ -61,7 +62,7 @@ h1{
   white-space:nowrap;
 }
 
-/* 指針 */
+/* ✔ 指針（完全固定圓心） */
 .pointer{
   position:absolute;
   left:50%;
@@ -70,6 +71,7 @@ h1{
   z-index:10;
 }
 
+/* 圓心 */
 .pointer::before{
   content:"";
   position:absolute;
@@ -77,15 +79,18 @@ h1{
   height:18px;
   background:#ff4f8b;
   border-radius:50%;
+  left:50%;
+  top:50%;
   transform:translate(-50%,-50%);
 }
 
+/* 箭頭從圓心往上 */
 .pointer::after{
   content:"";
   position:absolute;
   left:50%;
   top:50%;
-  transform:translate(-50%,-110px);
+  transform:translate(-50%,-100%);
   width:0;
   height:0;
   border-left:10px solid transparent;
@@ -138,6 +143,7 @@ const results = [
 "⚡ 凶"
 ];
 
+const wheel = document.getElementById("wheel");
 const labels = document.getElementById("labels");
 
 let size = results.length;
@@ -146,7 +152,7 @@ let angle = 360 / size;
 let rotation = 0;
 let spinning = false;
 
-/* ✔ 核心修正：真正貼扇形（極座標法） */
+/* ✔ 極座標：準確貼扇形 */
 for(let i = 0; i < size; i++){
 
   let deg = i * angle + angle / 2;
@@ -155,32 +161,29 @@ for(let i = 0; i < size; i++){
   div.className = "label";
   div.innerText = results[i];
 
-  /* ⭐ 三步法（關鍵） */
   div.style.transform =
-    `rotate(${deg}deg)
-     translate(110px)
-     rotate(0deg)`;
+    `rotate(${deg}deg) translate(110px)`;
 
   labels.appendChild(div);
 }
 
-/* ✔ 穩定 index */
+/* ✔ 穩定反推 index */
 function getIndex(rot){
   let normalized = (rot % 360 + 360) % 360;
-  let adjusted = (normalized + angle/2) % 360;
+  let adjusted = (normalized + angle / 2) % 360;
   return Math.floor(adjusted / angle);
 }
 
+/* ✔ 轉動 */
 function spin(){
 
 if(spinning) return;
 spinning = true;
 
 let spins = 5 * 360;
+rotation += spins + Math.floor(Math.random() * 360);
 
-rotation += spins + Math.floor(Math.random()*360);
-
-document.getElementById("wheel").style.transform =
+wheel.style.transform =
 `rotate(${rotation}deg)`;
 
 setTimeout(()=>{
