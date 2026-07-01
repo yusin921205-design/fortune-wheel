@@ -24,7 +24,7 @@ h1{
   margin:40px auto;
 }
 
-/* 輪盤 */
+/* 輪盤本體 */
 .wheel{
   width:100%;
   height:100%;
@@ -42,7 +42,7 @@ h1{
   );
 }
 
-/* 字層 */
+/* 字整層（像印在輪盤上） */
 .labels{
   position:absolute;
   width:100%;
@@ -51,7 +51,7 @@ h1{
   pointer-events:none;
 }
 
-/* 字 */
+/* 單字 */
 .label{
   position:absolute;
   left:50%;
@@ -150,8 +150,8 @@ let angle = 360 / size;
 let rotation = 0;
 let spinning = false;
 
-/* ⭐ 重點：往圓心再內縮 */
-const radius = 85; // ✔ 比之前更內（你要求）
+/* ✔ 貼在輪盤上的距離 */
+const radius = 90;
 
 for(let i = 0; i < size; i++){
 
@@ -161,14 +161,14 @@ for(let i = 0; i < size; i++){
   div.className = "label";
   div.innerText = results[i];
 
-  /* ✔ 貼在輪盤上 + 等角分布 */
+  /* ✔ 像印在輪盤上（不反轉、不修正） */
   div.style.transform =
     `rotate(${deg}deg) translate(${radius}px)`;
 
   labels.appendChild(div);
 }
 
-/* ✔ 剛體旋轉（整體一體） */
+/* ✔ 一體旋轉（核心） */
 function spin(){
 
 if(spinning) return;
@@ -177,7 +177,7 @@ spinning = true;
 let spins = 5 * 360;
 rotation += spins + Math.floor(Math.random()*360);
 
-/* 一起轉（關鍵） */
+/* wheel + labels = 同步剛體 */
 wheel.style.transform = `rotate(${rotation}deg)`;
 labels.style.transform = `rotate(${rotation}deg)`;
 
