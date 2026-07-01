@@ -24,7 +24,6 @@ h1{
   margin:40px auto;
 }
 
-/* ⭐ 改成真正穩定轉盤 */
 .wheel{
   width:100%;
   height:100%;
@@ -33,25 +32,22 @@ h1{
   transition:transform 4s cubic-bezier(.17,.67,.12,.99);
 }
 
-/* ⭐ 每一格改成「中心扇形定位」 */
 .segment{
   position:absolute;
   width:100%;
   height:100%;
-  transform-origin:center;
+  clip-path: polygon(50% 50%, 100% 0, 100% 100%);
 }
 
-/* ⭐ 文字固定在正確半徑 */
 .label{
   position:absolute;
   left:50%;
   top:50%;
-  transform-origin:center;
   font-size:14px;
   font-weight:bold;
+  transform-origin:0 0;
 }
 
-/* ⭐ 指針固定在正上方 */
 .pointer{
   position:absolute;
   left:50%;
@@ -145,7 +141,7 @@ let angle = 360 / size;
 let rotation = 0;
 let spinning = false;
 
-/* ⭐ 正確建盤（扇形平均分） */
+/* 建立轉盤 */
 function buildWheel(){
 
 for(let i=0;i<size;i++){
@@ -153,17 +149,15 @@ for(let i=0;i<size;i++){
 let seg = document.createElement("div");
 seg.className = "segment";
 
-/* 背景用 conic-like方式穩定切 */
-seg.style.background = `conic-gradient(${colors[i]} 0deg, ${colors[i]} 100%)`;
-
 seg.style.transform = `rotate(${i * angle}deg)`;
+seg.style.background = colors[i];
 
 let label = document.createElement("div");
 label.className = "label";
 
-/* ⭐ 固定在圓半徑 */
+/* ⭐ 穩定版文字定位（不再漂） */
 label.style.transform =
-`rotate(${i * angle + angle/2}deg) translate(110px)`;
+`rotate(${i * angle + angle/2}deg) translate(110px,0px)`;
 
 label.innerText = results[i];
 
@@ -176,7 +170,7 @@ wheel.appendChild(seg);
 
 buildWheel();
 
-/* ⭐ 穩定對齊版本 */
+/* 轉動（已對齊 pointer） */
 function spin(){
 
 if(spinning) return;
@@ -184,12 +178,9 @@ spinning = true;
 
 let index = Math.floor(Math.random() * size);
 
-let slice = 360 / size;
-
-/* ✔ 唯一正確對齊 */
 let target =
 360 * 5
-- (index * slice + slice / 2)
+- (index * angle + angle/2)
 - 90;
 
 rotation += target;
