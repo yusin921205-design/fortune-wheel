@@ -24,6 +24,7 @@ h1{
   margin:40px auto;
 }
 
+/* 輪盤 */
 .wheel{
   width:100%;
   height:100%;
@@ -41,20 +42,21 @@ h1{
   );
 }
 
-/* ✔ 文字層（一定要跟著轉） */
+/* 字整層（像貼紙） */
 .labels{
   position:absolute;
   width:100%;
   height:100%;
   z-index:2;
   pointer-events:none;
-  transition:transform 4s cubic-bezier(.2,.8,.2,1);
 }
 
+/* 單一文字 */
 .label{
   position:absolute;
   left:50%;
   top:50%;
+  transform-origin:center;
   font-size:14px;
   font-weight:bold;
   color:#333;
@@ -149,8 +151,8 @@ let angle = 360 / size;
 let rotation = 0;
 let spinning = false;
 
-/* ✔ 字在圓內（你要的100px版本） */
-const radius = 100;
+/* ✔ 固定半徑（貼在輪盤上） */
+const radius = 110;
 
 for(let i = 0; i < size; i++){
 
@@ -160,13 +162,14 @@ for(let i = 0; i < size; i++){
   div.className = "label";
   div.innerText = results[i];
 
+  /* ✔ 只做一次定位（像印在輪盤） */
   div.style.transform =
     `rotate(${deg}deg) translate(${radius}px)`;
 
   labels.appendChild(div);
 }
 
-/* ✔ 重點：wheel + labels 一起轉 */
+/* ✔ 剛體旋轉（核心） */
 function spin(){
 
 if(spinning) return;
@@ -175,7 +178,7 @@ spinning = true;
 let spins = 5 * 360;
 rotation += spins + Math.floor(Math.random()*360);
 
-/* ⭐ 這兩行是關鍵 */
+/* ⭐ 重點：整體一起轉 */
 wheel.style.transform = `rotate(${rotation}deg)`;
 labels.style.transform = `rotate(${rotation}deg)`;
 
