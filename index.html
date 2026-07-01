@@ -16,28 +16,34 @@ h1{
   color:#ff4f8b;
 }
 
+/* 轉盤 */
 .wheel{
-  width:260px;
-  height:260px;
+  width:280px;
+  height:280px;
   border-radius:50%;
   margin:40px auto;
   position:relative;
-  border:8px solid #ff4f8b;
-  transition: transform 3s cubic-bezier(.2,.8,.2,1);
+  border:6px solid #ff4f8b;
   overflow:hidden;
+  transition: transform 3s cubic-bezier(.2,.8,.2,1);
 }
 
-.segment{
+/* 每一格 */
+.slice{
   position:absolute;
   width:50%;
   height:50%;
   left:50%;
   top:50%;
   transform-origin:0% 0%;
-  font-size:14px;
-  color:#333;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:13px;
+  font-weight:bold;
 }
 
+/* 按鈕 */
 button{
   padding:12px 25px;
   border:none;
@@ -77,17 +83,38 @@ const results = [
 "⚡ 凶"
 ];
 
-// 畫轉盤
-const wheel = document.getElementById("wheel");
+const colors = [
+"#ffe0ec",
+"#ffd6e7",
+"#ffe9b3",
+"#d6f5d6",
+"#d6e6ff",
+"#ffd1d1",
+"#e0e0ff"
+];
 
-let angleStep = 360 / results.length;
+let wheel = document.getElementById("wheel");
 
+let angle = 360 / results.length;
+
+// 畫真正分區
 results.forEach((text, i) => {
-  let div = document.createElement("div");
-  div.className = "segment";
-  div.innerHTML = text;
-  div.style.transform = `rotate(${i * angleStep}deg) translate(0,-120px)`;
-  wheel.appendChild(div);
+
+let slice = document.createElement("div");
+slice.className = "slice";
+
+slice.innerHTML = text;
+slice.style.background = colors[i];
+
+// 扇形排列
+slice.style.transform = `
+rotate(${i * angle}deg)
+skewY(-${90 - angle}deg)
+translate(-50%, -50%)
+`;
+
+wheel.appendChild(slice);
+
 });
 
 let spinning = false;
@@ -97,6 +124,7 @@ function spin(){
 if(spinning) return;
 spinning = true;
 
+// 隨機轉動
 let deg = 360 * (3 + Math.random() * 3);
 
 wheel.style.transform = "rotate(" + deg + "deg)";
