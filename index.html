@@ -51,12 +51,12 @@ h1{
   pointer-events:none;
 }
 
-/* 文字 */
+/* 文字（保持原大小） */
 .label{
   position:absolute;
   left:50%;
   top:50%;
-  font-size:13px;
+  font-size:14px;
   font-weight:bold;
   color:#333;
   white-space:nowrap;
@@ -150,8 +150,8 @@ let angle = 360 / size;
 let rotation = 0;
 let spinning = false;
 
-/* ⭐ 穩定核心：固定角度 + 固定半徑 */
-const radius = 88; // ✔ 平衡點：不太外、不太內
+/* ⭐ 核心：沿扇形弧度對齊（正確版本） */
+const radius = 105; // 不縮字，只調位置
 
 for(let i = 0; i < size; i++){
 
@@ -161,14 +161,11 @@ for(let i = 0; i < size; i++){
   div.className = "label";
   div.innerText = results[i];
 
-  /* ✔ 正確穩定定位（不歪、不亂） */
-  let rad = deg * Math.PI / 180;
-
-  let x = Math.cos(rad) * radius;
-  let y = Math.sin(rad) * radius;
-
+  /* ✔ 標準扇形對齊寫法 */
   div.style.transform =
-    `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+    `rotate(${deg}deg)
+     translate(${radius}px)
+     rotate(-${deg}deg)`;
 
   labels.appendChild(div);
 }
