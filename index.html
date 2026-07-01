@@ -24,7 +24,7 @@ h1{
   margin:40px auto;
 }
 
-/* ===== 轉盤本體 ===== */
+/* 轉盤 */
 .wheel{
   width:100%;
   height:100%;
@@ -33,7 +33,7 @@ h1{
   transition:transform 4s cubic-bezier(.17,.67,.12,.99);
 }
 
-/* 每一格 */
+/* 扇形 */
 .segment{
   position:absolute;
   width:100%;
@@ -42,7 +42,7 @@ h1{
   transform-origin:center;
 }
 
-/* 文字 */
+/* ⭐ 文字（已修正） */
 .label{
   position:absolute;
   left:50%;
@@ -52,7 +52,7 @@ h1{
   font-weight:bold;
 }
 
-/* 指針（固定中間） */
+/* 指針 */
 .pointer{
   position:absolute;
   left:50%;
@@ -162,8 +162,9 @@ seg.style.background = colors[i];
 let label = document.createElement("div");
 label.className = "label";
 
+/* ⭐ 修正：文字鎖在各自扇形中心 */
 label.style.transform =
-`rotate(${angle/2}deg) translate(120px,-10px)`;
+`rotate(${i * angle + angle/2}deg) translate(120px,0px)`;
 
 label.innerText = results[i];
 
@@ -176,7 +177,7 @@ wheel.appendChild(seg);
 
 buildWheel();
 
-/* ===== 修正只在這裡 ===== */
+/* 轉動 */
 function spin(){
 
 if(spinning) return;
@@ -188,7 +189,7 @@ let target =
 360 * 5
 - (index * angle)
 - angle/2
-- 90;   /* ⭐ 關鍵修正：對齊12點方向 */
+- 90;
 
 rotation += target;
 
