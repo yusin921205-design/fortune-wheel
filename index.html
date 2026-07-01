@@ -16,27 +16,15 @@ h1{
   color:#ff4f8b;
 }
 
+/* 外框 */
 .container{
   position:relative;
   width:320px;
+  height:320px;
   margin:40px auto;
 }
 
-/* 指針 */
-.pointer{
-  width:0;
-  height:0;
-  border-left:15px solid transparent;
-  border-right:15px solid transparent;
-  border-bottom:25px solid #ff4f8b;
-  position:absolute;
-  left:50%;
-  top:-10px;
-  transform:translateX(-50%);
-  z-index:10;
-}
-
-/* 轉盤 */
+/* 轉盤（你原本是對的，保留） */
 .wheel{
   width:320px;
   height:320px;
@@ -51,6 +39,32 @@ h1{
     #e0e0ff 306deg 360deg
   );
   transition: transform 3s cubic-bezier(.2,.8,.2,1);
+}
+
+/* ⭐ 中心指針（重點修正） */
+.center-pointer{
+  position:absolute;
+  width:6px;
+  height:160px;
+  background:#ff4f8b;
+  left:50%;
+  top:50%;
+  transform:translate(-50%, -100%);
+  z-index:10;
+  border-radius:10px;
+}
+
+/* 中心圓點（軸心） */
+.center-pointer::after{
+  content:"";
+  position:absolute;
+  width:20px;
+  height:20px;
+  background:#ff4f8b;
+  border-radius:50%;
+  left:50%;
+  top:0;
+  transform:translate(-50%, -50%);
 }
 
 /* 按鈕 */
@@ -76,8 +90,12 @@ button{
 <h1>🎰 今日運勢轉盤</h1>
 
 <div class="container">
-  <div class="pointer"></div>
+
   <div class="wheel" id="wheel"></div>
+
+  <!-- ⭐ 中心指針 -->
+  <div class="center-pointer"></div>
+
 </div>
 
 <button onclick="spin()">開始轉運 🍀</button>
@@ -105,12 +123,10 @@ if(spinning) return;
 spinning = true;
 
 let index = Math.floor(Math.random() * results.length);
-
-/* 每一格 360/7 */
 let slice = 360 / results.length;
 
-/* 指到中間 */
-let target = 360 * 3 - (index * slice + slice/2);
+/* 讓結果對準指針（上方中心） */
+let target = 360 * 3 - (index * slice + slice / 2);
 
 rotation += target;
 
