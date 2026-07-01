@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>運勢輪盤</title>
+<title>宇宙行動建議</title>
 
 <style>
 
@@ -13,72 +13,56 @@ body{
   padding:40px;
 }
 
-h1{
-  color:#ff4f8b;
-}
-
 .container{
-  position:relative;
   width:320px;
   height:320px;
   margin:40px auto;
+  position:relative;
 }
 
-/* 輪盤本體 */
 .wheel{
   width:100%;
   height:100%;
   border-radius:50%;
   position:absolute;
   transition:transform 4s cubic-bezier(.2,.8,.2,1);
+
   background: conic-gradient(
-    #ffe0ec 0deg 51deg,
-    #ffd6e7 51deg 102deg,
-    #ffe9b3 102deg 153deg,
-    #d6f5d6 153deg 204deg,
-    #d6e6ff 204deg 255deg,
-    #ffd1d1 255deg 306deg,
-    #e0e0ff 306deg 360deg
+    #ffe0ec 0% 14.28%,
+    #ffd6e7 14.28% 28.56%,
+    #ffe9b3 28.56% 42.84%,
+    #d6f5d6 42.84% 57.12%,
+    #d6e6ff 57.12% 71.4%,
+    #ffd1d1 71.4% 85.68%,
+    #e0e0ff 85.68% 100%
   );
 }
 
-/* 字層 */
-.labels{
+/* 數字 */
+.num{
   position:absolute;
-  width:100%;
-  height:100%;
-  left:0;
-  top:0;
-  z-index:2;
-  pointer-events:none;
-}
-
-/* 單字 */
-.label{
-  position:absolute;
-  font-size:14px;
+  font-size:22px;
   font-weight:bold;
   color:#333;
-  white-space:nowrap;
-
-  /* ✔ 不歪、不反轉核心 */
-  transform: translate(-50%, -50%);
+  transform: translate(-50%,-50%);
 }
 
-/* 指針 */
+/* ⭐ 指針（已固定圓心） */
 .pointer{
   position:absolute;
   left:50%;
   top:50%;
   transform:translate(-50%,-50%);
-  z-index:10;
+  z-index:999;
+  pointer-events:none;
 }
 
+/* 圓心點 */
 .pointer::before{
   content:"";
   position:absolute;
-  width:18px;
-  height:18px;
+  width:16px;
+  height:16px;
   background:#ff4f8b;
   border-radius:50%;
   left:50%;
@@ -86,12 +70,13 @@ h1{
   transform:translate(-50%,-50%);
 }
 
+/* 指針 */
 .pointer::after{
   content:"";
   position:absolute;
   left:50%;
   top:50%;
-  transform:translate(-50%,-100%);
+  transform:translate(-50%,-130%);
   width:0;
   height:0;
   border-left:10px solid transparent;
@@ -107,12 +92,11 @@ button{
   background:#ff4f8b;
   color:white;
   font-size:16px;
-  cursor:pointer;
 }
 
 .result{
   margin-top:20px;
-  font-size:22px;
+  font-size:20px;
 }
 
 </style>
@@ -120,82 +104,76 @@ button{
 
 <body>
 
-<h1>🎰 運勢輪盤</h1>
+<h1>🌌 宇宙行動建議</h1>
 
 <div class="container">
   <div class="wheel" id="wheel"></div>
-  <div class="labels" id="labels"></div>
   <div class="pointer"></div>
 </div>
 
-<button onclick="spin()">開始轉運 🍀</button>
+<button onclick="spin()">接收訊號</button>
 
-<div class="result" id="result">點擊開始</div>
+<div class="result" id="result"></div>
 
 <script>
 
-const results = [
-"🌟 上上籤",
-"✨ 上籤",
-"🍀 吉",
-"🌿 小吉",
-"🌤 平",
-"🌧 小凶",
-"⚡ 凶"
-];
+/* 宇宙行動建議內容 */
+const messages = {
+1:"先不要急著下結論",
+2:"今天適合觀察",
+3:"有些事晚一點會更清楚",
+4:"留一點空間給變化",
+5:"不需要現在做決定",
+6:"有些答案會在你放鬆時浮現",
+7:"現在的停頓其實在整理方向"
+};
 
 const wheel = document.getElementById("wheel");
-const labels = document.getElementById("labels");
 
-let size = results.length;
+let size = 7;
 let angle = 360 / size;
 
-/* ✔ 固定圓心 */
-const centerX = 160;
-const centerY = 160;
-
-/* ✔ 固定半徑（你要求 95） */
 const radius = 95;
+
+/* 建立數字 */
+for(let i = 0; i < size; i++){
+
+  let deg = i * angle + angle / 2;
+  let rad = deg * Math.PI / 180;
+
+  let x = 160 + Math.cos(rad) * radius;
+  let y = 160 + Math.sin(rad) * radius;
+
+  let num = document.createElement("div");
+  num.className = "num";
+  num.innerText = i + 1;
+
+  num.style.left = x + "px";
+  num.style.top = y + "px";
+
+  wheel.appendChild(num);
+}
 
 let rotation = 0;
 let spinning = false;
 
-/* ✔ 等角分布 + 固定半徑（完全一致） */
-for(let i = 0; i < size; i++){
-
-  let deg = i * angle;
-
-  let rad = deg * Math.PI / 180;
-
-  let x = centerX + Math.cos(rad) * radius;
-  let y = centerY + Math.sin(rad) * radius;
-
-  let div = document.createElement("div");
-  div.className = "label";
-  div.innerText = results[i];
-
-  div.style.left = x + "px";
-  div.style.top = y + "px";
-
-  labels.appendChild(div);
-}
-
-/* ✔ 剛體旋轉（整體一體） */
 function spin(){
 
 if(spinning) return;
 spinning = true;
 
-let spins = 5 * 360;
-rotation += spins + Math.floor(Math.random()*360);
+/* 隨機結果 */
+let resultIndex = Math.floor(Math.random()*7) + 1;
+
+/* 轉動 */
+rotation += 1800 + (resultIndex-1) * angle;
 
 wheel.style.transform = `rotate(${rotation}deg)`;
-labels.style.transform = `rotate(${rotation}deg)`;
 
 setTimeout(()=>{
 
 document.getElementById("result").innerText =
-"純屬好玩，祝福你今天有美好的一天";
+messages[resultIndex];
 
 spinning = false;
 
