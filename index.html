@@ -41,16 +41,16 @@ h1{
   );
 }
 
-/* 文字層（一起轉） */
+/* ✔ 文字層（當作貼紙） */
 .labels{
   position:absolute;
   width:100%;
   height:100%;
   z-index:2;
   pointer-events:none;
-  transition:transform 4s cubic-bezier(.2,.8,.2,1);
 }
 
+/* ✔ 字貼在輪盤上 */
 .label{
   position:absolute;
   left:50%;
@@ -149,7 +149,7 @@ let angle = 360 / size;
 let rotation = 0;
 let spinning = false;
 
-/* ✔ 只做「放位置」，不要反轉 */
+/* ✔ 貼在輪盤上的文字 */
 const radius = 125;
 
 for(let i = 0; i < size; i++){
@@ -160,13 +160,14 @@ for(let i = 0; i < size; i++){
   div.className = "label";
   div.innerText = results[i];
 
+  /* ✔ 只做定位，不做反向修正 */
   div.style.transform =
     `rotate(${deg}deg) translate(${radius}px)`;
 
   labels.appendChild(div);
 }
 
-/* 轉動 */
+/* ✔ 轉動（重點：labels 一起轉） */
 function spin(){
 
 if(spinning) return;
@@ -176,7 +177,7 @@ let spins = 5 * 360;
 rotation += spins + Math.floor(Math.random()*360);
 
 wheel.style.transform = `rotate(${rotation}deg)`;
-labels.style.transform = `rotate(${rotation}deg)`;  // ⭐ 關鍵：一起轉
+labels.style.transform = `rotate(${rotation}deg)`; // ⭐ 一起轉圈
 
 setTimeout(()=>{
 
