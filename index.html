@@ -23,24 +23,6 @@ h1{
   margin:40px auto;
 }
 
-/* ⭐ 指針修正（尖頭朝內） */
-.pointer{
-  width:0;
-  height:0;
-
-  border-left:15px solid transparent;
-  border-right:15px solid transparent;
-
-  /* 👉 尖頭往下（指向轉盤） */
-  border-top:25px solid #ff4f8b;
-
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform:translate(-50%, -140%);
-  z-index:10;
-}
-
 /* ⭐ 轉盤 */
 .wheel{
   width:320px;
@@ -56,18 +38,23 @@ h1{
     #e0e0ff 306deg 360deg
   );
   transition: transform 3s cubic-bezier(.2,.8,.2,1);
+  position:absolute;
+  top:0;
+  left:0;
 }
 
-/* ⭐ 文字層（你缺的就是這個） */
+/* ⭐ 文字層（修正：一定要 absolute + same size） */
 .labels{
   position:absolute;
   width:320px;
   height:320px;
   top:0;
   left:0;
+  z-index:5;
   pointer-events:none;
 }
 
+/* 文字定位 */
 .label{
   position:absolute;
   width:100%;
@@ -78,6 +65,24 @@ h1{
   font-size:13px;
   font-weight:bold;
   color:#333;
+}
+
+/* ⭐ 指針（修正：尖頭朝內） */
+.pointer{
+  width:0;
+  height:0;
+
+  border-left:12px solid transparent;
+  border-right:12px solid transparent;
+
+  /* 👉 重點：改成往下（指向中心） */
+  border-top:25px solid #ff4f8b;
+
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%, -150%);
+  z-index:10;
 }
 
 /* 按鈕 */
@@ -104,11 +109,11 @@ button{
 
 <div class="container">
 
-  <div class="pointer"></div>
   <div class="wheel" id="wheel"></div>
 
-  <!-- ⭐ 文字層 -->
   <div class="labels" id="labels"></div>
+
+  <div class="pointer"></div>
 
 </div>
 
@@ -128,7 +133,7 @@ const results = [
 "⚡ 凶"
 ];
 
-/* ⭐ 做文字定位 */
+/* ⭐ 畫文字（修正關鍵） */
 const labels = document.getElementById("labels");
 const angle = 360 / results.length;
 
@@ -137,6 +142,7 @@ results.forEach((text, i) => {
 let div = document.createElement("div");
 div.className = "label";
 
+/* 👉 修正：一定要置中 + 往外推 */
 div.style.transform = `
 rotate(${i * angle + angle/2}deg)
 translateY(-130px)
