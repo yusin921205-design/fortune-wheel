@@ -24,7 +24,6 @@ h1{
   margin:40px auto;
 }
 
-/* 轉盤 */
 .wheel{
   width:100%;
   height:100%;
@@ -42,23 +41,11 @@ h1{
   );
 }
 
-/* 文字 */
-.label{
-  position:absolute;
-  left:50%;
-  top:50%;
-  font-size:14px;
-  font-weight:bold;
-  transform-origin:0 0;
-}
-
-/* ✔ 指針（修正：真正圓心） */
 .pointer{
   position:absolute;
   left:50%;
   top:50%;
   transform:translate(-50%,-50%);
-  z-index:10;
 }
 
 .pointer::before{
@@ -133,47 +120,40 @@ const wheel = document.getElementById("wheel");
 let size = results.length;
 let angle = 360 / size;
 
-/* ✔ 累加 rotation */
+/* ⚠️ 累加旋轉 */
 let rotation = 0;
 let spinning = false;
 
-/* 文字 */
-for(let i=0;i<size;i++){
-  let label = document.createElement("div");
-  label.className = "label";
-  label.innerText = results[i];
+/* 轉盤停止時的角度 -> 反推 index */
+function getIndexFromRotation(rot){
 
-  label.style.transform =
-    `rotate(${i * angle + angle/2}deg) translate(95px)`;
+let normalized = (rot % 360 + 360) % 360;
 
-  wheel.appendChild(label);
+/* 指針在正上方，所以要反向 */
+let adjusted = (360 - normalized + angle/2) % 360;
+
+return Math.floor(adjusted / angle);
+
 }
 
-/* ✔ 核心修正 */
+/* 轉動 */
 function spin(){
 
 if(spinning) return;
 spinning = true;
 
-let index = Math.floor(Math.random() * size);
-
-/* ✔ 一定轉多圈 */
+/* 隨機停止角度 */
 let spins = 5 * 360;
+let randomAngle = Math.floor(Math.random() * 360);
 
-/* ✔ 半格修正（關鍵） */
-let offset = angle / 2;
+rotation += spins + randomAngle;
 
-/* ✔ 目標角 */
-let target =
-spins +
-(360 - (index * angle + offset));
-
-rotation += target;
-
-/* ✔ 不再覆蓋，用累加 */
 wheel.style.transform = `rotate(${rotation}deg)`;
 
+/* 用「畫面結果」決定顯示 */
 setTimeout(()=>{
+
+let index = getIndexFromRotation(rotation);
 
 document.getElementById("result").innerText =
 "今日運勢：" + results[index];
