@@ -16,14 +16,35 @@ h1{
   color:#ff4f8b;
 }
 
+/* 外框 */
+.container{
+  position:relative;
+  width:300px;
+  height:300px;
+  margin:40px auto;
+}
+
+/* 指針 */
+.pointer{
+  position:absolute;
+  top:-10px;
+  left:50%;
+  transform:translateX(-50%);
+  width:0;
+  height:0;
+  border-left:15px solid transparent;
+  border-right:15px solid transparent;
+  border-bottom:25px solid #ff4f8b;
+  z-index:10;
+}
+
 /* 轉盤 */
 .wheel{
-  width:280px;
-  height:280px;
+  width:100%;
+  height:100%;
   border-radius:50%;
-  margin:40px auto;
-  position:relative;
   border:6px solid #ff4f8b;
+  position:relative;
   overflow:hidden;
   transition: transform 3s cubic-bezier(.2,.8,.2,1);
 }
@@ -65,7 +86,10 @@ button{
 
 <h1>🎰 今日運勢轉盤</h1>
 
-<div class="wheel" id="wheel"></div>
+<div class="container">
+  <div class="pointer"></div>
+  <div class="wheel" id="wheel"></div>
+</div>
 
 <button onclick="spin()">開始轉運 🍀</button>
 
@@ -94,24 +118,18 @@ const colors = [
 ];
 
 let wheel = document.getElementById("wheel");
-
 let angle = 360 / results.length;
 
-// 畫真正分區
+/* 畫分區 */
 results.forEach((text, i) => {
 
 let slice = document.createElement("div");
 slice.className = "slice";
-
 slice.innerHTML = text;
 slice.style.background = colors[i];
 
-// 扇形排列
-slice.style.transform = `
-rotate(${i * angle}deg)
-skewY(-${90 - angle}deg)
-translate(-50%, -50%)
-`;
+slice.style.transform =
+`rotate(${i * angle}deg) translate(0, -120px)`;
 
 wheel.appendChild(slice);
 
@@ -124,7 +142,6 @@ function spin(){
 if(spinning) return;
 spinning = true;
 
-// 隨機轉動
 let deg = 360 * (3 + Math.random() * 3);
 
 wheel.style.transform = "rotate(" + deg + "deg)";
