@@ -42,16 +42,17 @@ h1{
   );
 }
 
-/* 文字層 */
+/* ⭐ 字也要跟著轉（重點） */
 .labels{
   position:absolute;
   width:100%;
   height:100%;
   z-index:2;
   pointer-events:none;
+  transition:transform 4s cubic-bezier(.2,.8,.2,1);
 }
 
-/* ✔ 文字穩定 */
+/* 單一文字 */
 .label{
   position:absolute;
   left:50%;
@@ -62,16 +63,18 @@ h1{
   white-space:nowrap;
 }
 
-/* ✔ 指針（完全固定圓心） */
+/* ⭐ 指針（真正圓心） */
 .pointer{
   position:absolute;
   left:50%;
   top:50%;
   transform:translate(-50%,-50%);
+  width:0;
+  height:0;
   z-index:10;
 }
 
-/* 圓心 */
+/* 圓心點 */
 .pointer::before{
   content:"";
   position:absolute;
@@ -152,7 +155,7 @@ let angle = 360 / size;
 let rotation = 0;
 let spinning = false;
 
-/* ✔ 極座標：準確貼扇形 */
+/* ✔ 文字貼扇形 */
 for(let i = 0; i < size; i++){
 
   let deg = i * angle + angle / 2;
@@ -167,7 +170,7 @@ for(let i = 0; i < size; i++){
   labels.appendChild(div);
 }
 
-/* ✔ 穩定反推 index */
+/* ✔ 反推 index（穩定） */
 function getIndex(rot){
   let normalized = (rot % 360 + 360) % 360;
   let adjusted = (normalized + angle / 2) % 360;
@@ -181,10 +184,14 @@ if(spinning) return;
 spinning = true;
 
 let spins = 5 * 360;
+
+/* ⭐ wheel 跟 labels 一起轉（關鍵修正） */
 rotation += spins + Math.floor(Math.random() * 360);
 
-wheel.style.transform =
-`rotate(${rotation}deg)`;
+wheel.style.transform = `rotate(${rotation}deg)`;
+
+/* ⭐ 字跟著轉（不會漂） */
+labels.style.transform = `rotate(${rotation}deg)`;
 
 setTimeout(()=>{
 
