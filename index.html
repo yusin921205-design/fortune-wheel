@@ -23,7 +23,7 @@ h1{
   margin:40px auto;
 }
 
-/* ⭐ 轉盤 */
+/* 轉盤 */
 .wheel{
   width:320px;
   height:320px;
@@ -41,7 +41,7 @@ h1{
   position:absolute;
 }
 
-/* ⭐ 文字（修正：放在圓盤內） */
+/* ⭐ 文字（修正距離） */
 .labels{
   position:absolute;
   width:320px;
@@ -56,30 +56,26 @@ h1{
   height:100%;
   display:flex;
   justify-content:center;
-  align-items:center; /* ⭐ 改成置中 = 不會跑出去 */
+  align-items:center;
   font-size:13px;
   font-weight:bold;
   color:#333;
-  text-align:center;
-  pointer-events:none;
 }
 
-/* ⭐ 指針（中心 + 尖端朝外） */
+/* ⭐ 指針（中心軸版本） */
 .pointer{
   position:absolute;
   left:50%;
   top:50%;
   transform:translate(-50%, -50%);
-  width:0;
-  height:0;
   z-index:10;
 }
 
 /* 中心點 */
 .pointer::before{
   content:"";
-  width:16px;
-  height:16px;
+  width:18px;
+  height:18px;
   background:#ff4f8b;
   border-radius:50%;
   position:absolute;
@@ -88,24 +84,23 @@ h1{
   transform:translate(-50%, -50%);
 }
 
-/* ⭐ 尖尖朝外（往上指） */
+/* ⭐ 尖端朝外（往上） */
 .pointer::after{
   content:"";
   position:absolute;
   left:50%;
-  top:-120px;
+  top:-140px;
   transform:translateX(-50%);
+
   width:0;
   height:0;
 
   border-left:10px solid transparent;
   border-right:10px solid transparent;
 
-  /* 👉 尖端朝外（往上） */
   border-bottom:20px solid #ff4f8b;
 }
 
-/* 按鈕 */
 button{
   margin-top:20px;
   padding:12px 25px;
@@ -153,19 +148,18 @@ const results = [
 "⚡ 凶"
 ];
 
-/* ⭐ 文字放在圓盤內 */
 const labels = document.getElementById("labels");
 const angle = 360 / results.length;
 
+/* ⭐ 文字修正：往外一點 */
 results.forEach((text, i) => {
 
 let div = document.createElement("div");
 div.className = "label";
 
-/* 👉 內圈文字（不再跑出去） */
 div.style.transform = `
 rotate(${i * angle + angle/2}deg)
-translateY(-70px)
+translateY(-100px)
 `;
 
 div.innerHTML = text;
