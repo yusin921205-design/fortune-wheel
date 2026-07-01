@@ -155,7 +155,6 @@ seg.style.background = colors[i];
 let label = document.createElement("div");
 label.className = "label";
 
-/* ⭐ 不動 */
 label.style.transform =
 `rotate(${i * angle + angle/2}deg) translate(110px,0px)`;
 
@@ -170,7 +169,7 @@ wheel.appendChild(seg);
 
 buildWheel();
 
-/* ⭐ 唯一修改：對齊修正 */
+/* ⭐ 穩定版 spin（已校正對齊） */
 function spin(){
 
 if(spinning) return;
@@ -178,10 +177,10 @@ spinning = true;
 
 let index = Math.floor(Math.random() * size);
 
-/* ✔ 修正點：移除多餘 offset，避免漂移 */
+/* ✔ 唯一正確公式 */
 let target =
 360 * 5
-- (index * angle + angle/2);
+- (index * angle + angle / 2);
 
 rotation += target;
 
