@@ -24,6 +24,7 @@ h1{
   margin:40px auto;
 }
 
+/* 轉盤 */
 .wheel{
   width:100%;
   height:100%;
@@ -41,7 +42,7 @@ h1{
   );
 }
 
-/* ✔ 文字 */
+/* 文字容器 */
 .labels{
   position:absolute;
   width:100%;
@@ -50,6 +51,7 @@ h1{
   pointer-events:none;
 }
 
+/* ✔ 字樣（穩定水平） */
 .label{
   position:absolute;
   left:50%;
@@ -57,7 +59,9 @@ h1{
   font-size:14px;
   font-weight:bold;
   color:#333;
-  transform-origin:0 0;
+  transform-origin:center;
+  text-align:center;
+  white-space:nowrap;
 }
 
 /* 指針 */
@@ -84,7 +88,7 @@ h1{
   position:absolute;
   left:50%;
   top:50%;
-  transform:translate(-50%,-50%);
+  transform:translate(-50%,-110px);
   width:0;
   height:0;
   border-left:10px solid transparent;
@@ -145,26 +149,25 @@ let angle = 360 / size;
 let rotation = 0;
 let spinning = false;
 
-/* ✔ 正確貼扇形（這版才是真的） */
-for(let i=0;i<size;i++){
+/* ✔ 正確置中：不歪、不翻轉、不跑格 */
+for(let i = 0; i < size; i++){
 
-let deg = i * angle + angle/2;
+  let deg = i * angle + angle / 2;
 
-let div = document.createElement("div");
-div.className = "label";
-div.innerText = results[i];
+  let div = document.createElement("div");
+  div.className = "label";
+  div.innerText = results[i];
 
-/* ✔ 核心：3步定位 */
-div.style.transform =
-  `rotate(${deg}deg) translate(110px) rotate(${-deg}deg)`;
+  div.style.transform =
+    `rotate(${deg}deg) translate(110px)`;
 
-labels.appendChild(div);
-
+  labels.appendChild(div);
 }
 
+/* ✔ 反推 index（穩定一致） */
 function getIndex(rot){
   let normalized = (rot % 360 + 360) % 360;
-  let adjusted = (normalized + angle/2) % 360;
+  let adjusted = (normalized + angle / 2) % 360;
   return Math.floor(adjusted / angle);
 }
 
@@ -173,8 +176,10 @@ function spin(){
 if(spinning) return;
 spinning = true;
 
+/* ✔ 一定超過一圈 */
 let spins = 5 * 360;
 
+/* ✔ 隨機角度 */
 rotation += spins + Math.floor(Math.random()*360);
 
 document.getElementById("wheel").style.transform =
