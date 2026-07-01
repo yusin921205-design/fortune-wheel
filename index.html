@@ -42,7 +42,7 @@ h1{
   );
 }
 
-/* ⭐ 字也要跟著轉（重點） */
+/* ⭐ 文字層（會跟著一起轉） */
 .labels{
   position:absolute;
   width:100%;
@@ -52,7 +52,7 @@ h1{
   transition:transform 4s cubic-bezier(.2,.8,.2,1);
 }
 
-/* 單一文字 */
+/* 文字 */
 .label{
   position:absolute;
   left:50%;
@@ -63,18 +63,15 @@ h1{
   white-space:nowrap;
 }
 
-/* ⭐ 指針（真正圓心） */
+/* 指針（固定圓心） */
 .pointer{
   position:absolute;
   left:50%;
   top:50%;
   transform:translate(-50%,-50%);
-  width:0;
-  height:0;
   z-index:10;
 }
 
-/* 圓心點 */
 .pointer::before{
   content:"";
   position:absolute;
@@ -87,7 +84,6 @@ h1{
   transform:translate(-50%,-50%);
 }
 
-/* 箭頭從圓心往上 */
 .pointer::after{
   content:"";
   position:absolute;
@@ -155,7 +151,7 @@ let angle = 360 / size;
 let rotation = 0;
 let spinning = false;
 
-/* ✔ 文字貼扇形 */
+/* ✔ 文字：放在每個扇形中心 */
 for(let i = 0; i < size; i++){
 
   let deg = i * angle + angle / 2;
@@ -164,17 +160,11 @@ for(let i = 0; i < size; i++){
   div.className = "label";
   div.innerText = results[i];
 
+  /* ⭐ 放到扇形中心點 */
   div.style.transform =
-    `rotate(${deg}deg) translate(110px)`;
+    `rotate(${deg}deg) translate(110px) rotate(-${deg}deg)`;
 
   labels.appendChild(div);
-}
-
-/* ✔ 反推 index（穩定） */
-function getIndex(rot){
-  let normalized = (rot % 360 + 360) % 360;
-  let adjusted = (normalized + angle / 2) % 360;
-  return Math.floor(adjusted / angle);
 }
 
 /* ✔ 轉動 */
@@ -185,17 +175,13 @@ spinning = true;
 
 let spins = 5 * 360;
 
-/* ⭐ wheel 跟 labels 一起轉（關鍵修正） */
-rotation += spins + Math.floor(Math.random() * 360);
+rotation += spins + Math.floor(Math.random()*360);
 
+/* wheel + labels 一起轉（關鍵） */
 wheel.style.transform = `rotate(${rotation}deg)`;
-
-/* ⭐ 字跟著轉（不會漂） */
 labels.style.transform = `rotate(${rotation}deg)`;
 
 setTimeout(()=>{
-
-let index = getIndex(rotation);
 
 document.getElementById("result").innerText =
 "純屬好玩，祝福你今天有美好的一天";
