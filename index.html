@@ -37,6 +37,7 @@ h1{
   width:100%;
   height:100%;
   clip-path: polygon(50% 50%, 100% 0, 100% 100%);
+  transform-origin:center;
 }
 
 .label{
@@ -141,6 +142,7 @@ let angle = 360 / size;
 let rotation = 0;
 let spinning = false;
 
+/* 建立轉盤 */
 function buildWheel(){
 
 for(let i=0;i<size;i++){
@@ -168,7 +170,7 @@ wheel.appendChild(seg);
 
 buildWheel();
 
-/* ⭐ 只修這裡（對齊完全正確版本） */
+/* ⭐ FINAL：不再用猜角度，改用「整格對齊」 */
 function spin(){
 
 if(spinning) return;
@@ -176,18 +178,21 @@ spinning = true;
 
 let index = Math.floor(Math.random() * size);
 
+/* 👉 直接讓第 index 格對準 pointer */
+let baseRotation = rotation % 360;
+
+/* 每格角度 */
 let slice = 360 / size;
 
-/* ✔ 正確對齊公式（唯一版本） */
-let target =
-360 * 5
-- (index * slice)
-- slice / 2
-- 90;
+/* ⭐ 算「要轉到哪個角度剛好停在中間」 */
+let targetRotation =
+360 * 5 +
+(index * slice);
 
-rotation += target;
+/* 扣掉目前角度，讓它對齊 */
+rotation = targetRotation;
 
-wheel.style.transform = `rotate(${rotation}deg)`;
+wheel.style.transform = `rotate(${-rotation}deg)`;
 
 setTimeout(()=>{
 
