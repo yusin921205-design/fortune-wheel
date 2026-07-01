@@ -42,11 +42,13 @@ h1{
   );
 }
 
-/* 字整層（像印在輪盤上） */
+/* 字層 */
 .labels{
   position:absolute;
   width:100%;
   height:100%;
+  left:0;
+  top:0;
   z-index:2;
   pointer-events:none;
 }
@@ -54,12 +56,13 @@ h1{
 /* 單字 */
 .label{
   position:absolute;
-  left:50%;
-  top:50%;
   font-size:14px;
   font-weight:bold;
   color:#333;
   white-space:nowrap;
+
+  /* ✔ 不歪、不反轉核心 */
+  transform: translate(-50%, -50%);
 }
 
 /* 指針 */
@@ -147,28 +150,37 @@ const labels = document.getElementById("labels");
 let size = results.length;
 let angle = 360 / size;
 
+/* ✔ 固定圓心 */
+const centerX = 160;
+const centerY = 160;
+
+/* ✔ 固定半徑（你要求 95） */
+const radius = 95;
+
 let rotation = 0;
 let spinning = false;
 
-/* ✔ 貼在輪盤上的距離 */
-const radius = 90;
-
+/* ✔ 等角分布 + 固定半徑（完全一致） */
 for(let i = 0; i < size; i++){
 
-  let deg = i * angle + angle / 2;
+  let deg = i * angle;
+
+  let rad = deg * Math.PI / 180;
+
+  let x = centerX + Math.cos(rad) * radius;
+  let y = centerY + Math.sin(rad) * radius;
 
   let div = document.createElement("div");
   div.className = "label";
   div.innerText = results[i];
 
-  /* ✔ 像印在輪盤上（不反轉、不修正） */
-  div.style.transform =
-    `rotate(${deg}deg) translate(${radius}px)`;
+  div.style.left = x + "px";
+  div.style.top = y + "px";
 
   labels.appendChild(div);
 }
 
-/* ✔ 一體旋轉（核心） */
+/* ✔ 剛體旋轉（整體一體） */
 function spin(){
 
 if(spinning) return;
@@ -177,7 +189,6 @@ spinning = true;
 let spins = 5 * 360;
 rotation += spins + Math.floor(Math.random()*360);
 
-/* wheel + labels = 同步剛體 */
 wheel.style.transform = `rotate(${rotation}deg)`;
 labels.style.transform = `rotate(${rotation}deg)`;
 
