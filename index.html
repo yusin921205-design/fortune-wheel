@@ -24,7 +24,7 @@ h1{
   margin:40px auto;
 }
 
-/* 轉盤 */
+/* 轉盤底 */
 .wheel{
   width:100%;
   height:100%;
@@ -40,9 +40,18 @@ h1{
     #ffd1d1 255deg 306deg,
     #e0e0ff 306deg 360deg
   );
+  z-index:1;
 }
 
-/* ⭐ 文字（補回來 + 提高層級） */
+/* ⭐ 文字層（獨立，不會消失） */
+.labels{
+  position:absolute;
+  width:100%;
+  height:100%;
+  z-index:2;
+  pointer-events:none;
+}
+
 .label{
   position:absolute;
   left:50%;
@@ -51,7 +60,6 @@ h1{
   font-weight:bold;
   color:#333;
   transform-origin:0 0;
-  z-index:2;
 }
 
 /* 指針 */
@@ -111,6 +119,7 @@ button{
 
 <div class="container">
   <div class="wheel" id="wheel"></div>
+  <div class="labels" id="labels"></div>
   <div class="pointer"></div>
 </div>
 
@@ -131,6 +140,7 @@ const results = [
 ];
 
 const wheel = document.getElementById("wheel");
+const labels = document.getElementById("labels");
 
 let size = results.length;
 let angle = 360 / size;
@@ -138,33 +148,23 @@ let angle = 360 / size;
 let rotation = 0;
 let spinning = false;
 
-/* ⭐ 補回文字（你剛剛消失的原因就在這） */
-function buildText(){
-
+/* ✔ 文字一定顯示 */
 for(let i=0;i<size;i++){
+  let div = document.createElement("div");
+  div.className = "label";
+  div.innerText = results[i];
 
-let label = document.createElement("div");
-label.className = "label";
-label.innerText = results[i];
+  div.style.transform =
+    `rotate(${i * angle + angle/2}deg) translate(95px)`;
 
-label.style.transform =
-`rotate(${i * angle + angle/2}deg) translate(95px)`;
-
-wheel.appendChild(label);
-
+  labels.appendChild(div);
 }
 
-}
-
-buildText();
-
-/* ✔ 穩定對齊 */
+/* ✔ 穩定 index */
 function getIndex(rot){
-
-let normalized = (rot % 360 + 360) % 360;
-let adjusted = (normalized + angle/2) % 360;
-return Math.floor(adjusted / angle);
-
+  let normalized = (rot % 360 + 360) % 360;
+  let adjusted = (normalized + angle/2) % 360;
+  return Math.floor(adjusted / angle);
 }
 
 function spin(){
@@ -172,10 +172,8 @@ function spin(){
 if(spinning) return;
 spinning = true;
 
-/* ✔ 一定超過一圈 */
 let spins = 5 * 360;
 
-/* ✔ 隨機停止 */
 rotation += spins + Math.floor(Math.random()*360);
 
 wheel.style.transform = `rotate(${rotation}deg)`;
