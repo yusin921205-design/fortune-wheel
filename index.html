@@ -30,13 +30,15 @@ h1{
   border-radius:50%;
   position:absolute;
   transition:transform 4s cubic-bezier(.17,.67,.12,.99);
-}
-
-.segment{
-  position:absolute;
-  width:100%;
-  height:100%;
-  clip-path: polygon(50% 50%, 100% 0, 100% 100%);
+  background: conic-gradient(
+    #ffe0ec 0deg 51deg,
+    #ffd6e7 51deg 102deg,
+    #ffe9b3 102deg 153deg,
+    #d6f5d6 153deg 204deg,
+    #d6e6ff 204deg 255deg,
+    #ffd1d1 255deg 306deg,
+    #e0e0ff 306deg 360deg
+  );
 }
 
 .label{
@@ -124,16 +126,6 @@ const results = [
 "⚡ 凶"
 ];
 
-const colors = [
-"#ffe0ec",
-"#ffd6e7",
-"#ffe9b3",
-"#d6f5d6",
-"#d6e6ff",
-"#ffd1d1",
-"#e0e0ff"
-];
-
 const wheel = document.getElementById("wheel");
 
 let size = results.length;
@@ -141,36 +133,24 @@ let angle = 360 / size;
 let rotation = 0;
 let spinning = false;
 
-/* 建立轉盤 */
-function buildWheel(){
-
+/* ⭐ 文字放置 */
+function buildLabels(){
 for(let i=0;i<size;i++){
-
-let seg = document.createElement("div");
-seg.className = "segment";
-
-seg.style.transform = `rotate(${i * angle}deg)`;
-seg.style.background = colors[i];
-
 let label = document.createElement("div");
 label.className = "label";
-
-/* ⭐ 穩定版文字定位（不再漂） */
-label.style.transform =
-`rotate(${i * angle + angle/2}deg) translate(110px,0px)`;
-
 label.innerText = results[i];
 
-seg.appendChild(label);
-wheel.appendChild(seg);
+/* 放在每個扇形中間 */
+label.style.transform =
+`rotate(${i * angle + angle/2}deg) translate(110px)`;
 
+wheel.appendChild(label);
+}
 }
 
-}
+buildLabels();
 
-buildWheel();
-
-/* 轉動（已對齊 pointer） */
+/* ⭐ 穩定對齊版 */
 function spin(){
 
 if(spinning) return;
@@ -178,9 +158,10 @@ spinning = true;
 
 let index = Math.floor(Math.random() * size);
 
+/* ✔ 核心：對準12點 pointer */
 let target =
 360 * 5
-- (index * angle + angle/2)
+- (index * angle + angle / 2)
 - 90;
 
 rotation += target;
