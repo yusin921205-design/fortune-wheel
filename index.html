@@ -24,6 +24,7 @@ h1{
   margin:40px auto;
 }
 
+/* 轉盤 */
 .wheel{
   width:100%;
   height:100%;
@@ -41,45 +42,40 @@ h1{
   );
 }
 
+/* 文字（固定不動，只跟著旋轉） */
+.labels{
+  position:absolute;
+  width:100%;
+  height:100%;
+  top:0;
+  left:0;
+  pointer-events:none;
+}
+
 .label{
   position:absolute;
   left:50%;
   top:50%;
+  transform-origin:0 0;
   font-size:14px;
   font-weight:bold;
-  transform-origin:0 0;
 }
 
+/* 指針（固定在上方） */
 .pointer{
   position:absolute;
   left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
+  top:-10px;
+  transform:translateX(-50%);
+  width:0;
+  height:0;
+  border-left:12px solid transparent;
+  border-right:12px solid transparent;
+  border-bottom:20px solid #ff4f8b;
   z-index:10;
 }
 
-.pointer:before{
-  content:"";
-  position:absolute;
-  width:18px;
-  height:18px;
-  background:#ff4f8b;
-  border-radius:50%;
-  transform:translate(-50%,-50%);
-}
-
-.pointer:after{
-  content:"";
-  position:absolute;
-  left:-10px;
-  top:-120px;
-  width:0;
-  height:0;
-  border-left:10px solid transparent;
-  border-right:10px solid transparent;
-  border-bottom:25px solid #ff4f8b;
-}
-
+/* 按鈕 */
 button{
   margin-top:20px;
   padding:12px 25px;
@@ -105,7 +101,10 @@ button{
 
 <div class="container">
 
-  <div class="wheel" id="wheel"></div>
+  <div class="wheel" id="wheel">
+    <div class="labels" id="labels"></div>
+  </div>
+
   <div class="pointer"></div>
 
 </div>
@@ -127,30 +126,26 @@ const results = [
 ];
 
 const wheel = document.getElementById("wheel");
+const labels = document.getElementById("labels");
 
 let size = results.length;
 let angle = 360 / size;
 let rotation = 0;
 let spinning = false;
 
-/* ⭐ 文字放置 */
-function buildLabels(){
+/* 建立文字 */
 for(let i=0;i<size;i++){
-let label = document.createElement("div");
-label.className = "label";
-label.innerText = results[i];
+  let div = document.createElement("div");
+  div.className = "label";
+  div.innerText = results[i];
 
-/* 放在每個扇形中間 */
-label.style.transform =
-`rotate(${i * angle + angle/2}deg) translate(110px)`;
+  div.style.transform =
+    `rotate(${i * angle}deg) translate(0,-120px)`;
 
-wheel.appendChild(label);
-}
+  labels.appendChild(div);
 }
 
-buildLabels();
-
-/* ⭐ 穩定對齊版 */
+/* 轉動 */
 function spin(){
 
 if(spinning) return;
@@ -158,13 +153,12 @@ spinning = true;
 
 let index = Math.floor(Math.random() * size);
 
-/* ✔ 核心：對準12點 pointer */
+/* ⭐ 核心正確公式（不需要 -90） */
 let target =
-360 * 5
-- (index * angle + angle / 2)
-- 90;
+360 * 5 +
+(360 - index * angle - angle/2);
 
-rotation += target;
+rotation = target;
 
 wheel.style.transform = `rotate(${rotation}deg)`;
 
