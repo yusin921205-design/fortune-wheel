@@ -41,12 +41,14 @@ h1{
   );
 }
 
+/* ✔ 文字層（一定要跟著轉） */
 .labels{
   position:absolute;
   width:100%;
   height:100%;
   z-index:2;
   pointer-events:none;
+  transition:transform 4s cubic-bezier(.2,.8,.2,1);
 }
 
 .label{
@@ -147,8 +149,8 @@ let angle = 360 / size;
 let rotation = 0;
 let spinning = false;
 
-/* ⭐ 只改這裡：往內縮 */
-const radius = 100; // 原本125 → 現在更內，不會凸出
+/* ✔ 字在圓內（你要的100px版本） */
+const radius = 100;
 
 for(let i = 0; i < size; i++){
 
@@ -164,7 +166,7 @@ for(let i = 0; i < size; i++){
   labels.appendChild(div);
 }
 
-/* 轉動 */
+/* ✔ 重點：wheel + labels 一起轉 */
 function spin(){
 
 if(spinning) return;
@@ -173,6 +175,7 @@ spinning = true;
 let spins = 5 * 360;
 rotation += spins + Math.floor(Math.random()*360);
 
+/* ⭐ 這兩行是關鍵 */
 wheel.style.transform = `rotate(${rotation}deg)`;
 labels.style.transform = `rotate(${rotation}deg)`;
 
