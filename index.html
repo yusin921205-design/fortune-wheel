@@ -17,17 +17,25 @@ h1{
 }
 
 .wheel{
-  width:220px;
-  height:220px;
+  width:260px;
+  height:260px;
   border-radius:50%;
-  border:8px solid #ff4f8b;
   margin:40px auto;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:22px;
+  position:relative;
+  border:8px solid #ff4f8b;
   transition: transform 3s cubic-bezier(.2,.8,.2,1);
-  background:white;
+  overflow:hidden;
+}
+
+.segment{
+  position:absolute;
+  width:50%;
+  height:50%;
+  left:50%;
+  top:50%;
+  transform-origin:0% 0%;
+  font-size:14px;
+  color:#333;
 }
 
 button{
@@ -42,7 +50,7 @@ button{
 
 .result{
   margin-top:20px;
-  font-size:24px;
+  font-size:22px;
 }
 </style>
 </head>
@@ -51,7 +59,7 @@ button{
 
 <h1>🎰 今日運勢轉盤</h1>
 
-<div class="wheel" id="wheel">開始</div>
+<div class="wheel" id="wheel"></div>
 
 <button onclick="spin()">開始轉運 🍀</button>
 
@@ -69,6 +77,19 @@ const results = [
 "⚡ 凶"
 ];
 
+// 畫轉盤
+const wheel = document.getElementById("wheel");
+
+let angleStep = 360 / results.length;
+
+results.forEach((text, i) => {
+  let div = document.createElement("div");
+  div.className = "segment";
+  div.innerHTML = text;
+  div.style.transform = `rotate(${i * angleStep}deg) translate(0,-120px)`;
+  wheel.appendChild(div);
+});
+
 let spinning = false;
 
 function spin(){
@@ -76,10 +97,6 @@ function spin(){
 if(spinning) return;
 spinning = true;
 
-let wheel = document.getElementById("wheel");
-let result = document.getElementById("result");
-
-// 隨機旋轉角度
 let deg = 360 * (3 + Math.random() * 3);
 
 wheel.style.transform = "rotate(" + deg + "deg)";
@@ -88,8 +105,8 @@ setTimeout(() => {
 
 let r = Math.floor(Math.random() * results.length);
 
-result.innerHTML = "今日運勢：" + results[r];
-wheel.innerHTML = "✨";
+document.getElementById("result").innerHTML =
+"今日運勢：" + results[r];
 
 spinning = false;
 
