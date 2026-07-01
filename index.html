@@ -65,7 +65,7 @@ h1{
   text-align:center;
 }
 
-/* ⭐ 指針修正（真正鎖圓心） */
+/* 指針（已固定圓心） */
 .pointer{
   position:absolute;
   left:50%;
@@ -74,7 +74,6 @@ h1{
   z-index:10;
 }
 
-/* 中心點 */
 .pointer:before{
   content:"";
   position:absolute;
@@ -87,17 +86,13 @@ h1{
   transform:translate(-50%,-50%);
 }
 
-/* ⭐ 箭頭（修正：從圓心長出去） */
 .pointer:after{
   content:"";
   position:absolute;
-
   left:-12px;
-  top:-20px; /* ⭐ 關鍵：這裡才是圓心位置 */
-
+  top:-20px;
   width:0;
   height:0;
-
   border-left:12px solid transparent;
   border-right:12px solid transparent;
   border-bottom:30px solid #ff4f8b;
@@ -177,16 +172,23 @@ let index=Math.floor(Math.random()*results.length);
 
 let slice=360/results.length;
 
-let target=360*5-(index*slice+slice/2);
+/* ⭐ 修正核心：校正 12 點方向 */
+let baseOffset = -90;
 
-rotation+=target;
+/* 計算最終角度 */
+let target =
+360 * 5
+- (index * slice + slice / 2)
++ baseOffset;
 
-wheel.style.transform="rotate("+rotation+"deg)";
+rotation += target;
+
+wheel.style.transform = "rotate(" + rotation + "deg)";
 
 setTimeout(()=>{
 
-document.getElementById("result").innerHTML=
-"今日運勢："+results[index];
+document.getElementById("result").innerHTML =
+"今日運勢：" + results[index];
 
 spinning=false;
 
