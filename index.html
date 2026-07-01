@@ -41,7 +41,7 @@ h1{
   position:absolute;
 }
 
-/* ⭐ 文字（再往外） */
+/* ⭐ 文字（在圓內） */
 .labels{
   position:absolute;
   width:320px;
@@ -62,7 +62,7 @@ h1{
   color:#333;
 }
 
-/* ⭐ 指針（真正放在圓心） */
+/* ⭐ 指針（已修正：真正圓心 + 尖端朝外） */
 .pointer{
   position:absolute;
   left:50%;
@@ -84,12 +84,12 @@ h1{
   transform:translate(-50%, -50%);
 }
 
-/* ⭐ 尖端朝外 */
+/* 尖端朝外 */
 .pointer::after{
   content:"";
   position:absolute;
   left:50%;
-  top:-150px;   /* 👉 稍微拉長更像指針 */
+  top:-150px;
   transform:translateX(-50%);
 
   width:0;
@@ -128,7 +128,6 @@ button{
 
   <div class="labels" id="labels"></div>
 
-  <!-- ⭐ 中心指針 -->
   <div class="pointer"></div>
 
 </div>
@@ -149,19 +148,20 @@ const results = [
 "⚡ 凶"
 ];
 
+/* ⭐ 文字放在圓盤內 */
 const labels = document.getElementById("labels");
 const angle = 360 / results.length;
 
-/* ⭐ 文字：再往外一點 */
 results.forEach((text, i) => {
 
 let div = document.createElement("div");
 div.className = "label";
 
+/* 控制文字在圓內位置 */
 div.style.transform = `
 rotate(${i * angle + angle/2}deg)
 translateY(-120px)
-`; /* 👈 原本100 → 改120（往外移） */
+`;
 
 div.innerHTML = text;
 
