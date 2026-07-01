@@ -16,6 +16,7 @@ h1{
   color:#ff4f8b;
 }
 
+/* ⭐ 關鍵修正：一定要讓子元素以這個為中心 */
 .container{
   position:relative;
   width:320px;
@@ -23,7 +24,7 @@ h1{
   margin:40px auto;
 }
 
-/* ⭐ 轉盤 */
+/* 轉盤 */
 .wheel{
   width:320px;
   height:320px;
@@ -39,9 +40,11 @@ h1{
   );
   transition: transform 3s cubic-bezier(.2,.8,.2,1);
   position:absolute;
+  top:0;
+  left:0;
 }
 
-/* ⭐ 文字（在圓內） */
+/* 文字 */
 .labels{
   position:absolute;
   width:320px;
@@ -62,12 +65,15 @@ h1{
   color:#333;
 }
 
-/* ⭐ 指針（已修正：真正圓心 + 尖端朝外） */
+/* ⭐ 指針（真正修好版本） */
 .pointer{
   position:absolute;
+
+  /* ⭐ 這兩個才是真正中心 */
   left:50%;
   top:50%;
   transform:translate(-50%, -50%);
+
   z-index:10;
 }
 
@@ -148,7 +154,6 @@ const results = [
 "⚡ 凶"
 ];
 
-/* ⭐ 文字放在圓盤內 */
 const labels = document.getElementById("labels");
 const angle = 360 / results.length;
 
@@ -157,7 +162,6 @@ results.forEach((text, i) => {
 let div = document.createElement("div");
 div.className = "label";
 
-/* 控制文字在圓內位置 */
 div.style.transform = `
 rotate(${i * angle + angle/2}deg)
 translateY(-120px)
@@ -192,8 +196,12 @@ setTimeout(() => {
 document.getElementById("result").innerHTML =
 "今日運勢：" + results[index];
 
-spinning = false;}
-           3000);}
+spinning = false;
+
+}, 3000);
+
+}
+
 </script>
 
 </body>
