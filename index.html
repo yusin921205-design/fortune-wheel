@@ -23,7 +23,7 @@ h1{
   margin:40px auto;
 }
 
-/* ⭐ 轉盤 */
+/* 轉盤 */
 .wheel{
   width:320px;
   height:320px;
@@ -37,21 +37,22 @@ h1{
     #ffd1d1 255deg 306deg,
     #e0e0ff 306deg 360deg
   );
-  transition: transform 3s cubic-bezier(.2,.8,.2,1);
   position:absolute;
   top:0;
   left:0;
+  transition: transform 3s ease;
   z-index:1;
 }
 
-/* ⭐ 文字（真正貼圓） */
+/* 文字層 */
 .labels{
   position:absolute;
-  width:320px;
-  height:320px;
+  width:100%;
+  height:100%;
   top:0;
   left:0;
   z-index:2;
+  pointer-events:none;
 }
 
 .label{
@@ -66,7 +67,7 @@ h1{
   color:#333;
 }
 
-/* ⭐ 指針（圓心固定） */
+/* 指針（固定正中心） */
 .pointer{
   position:absolute;
   left:50%;
@@ -91,13 +92,17 @@ h1{
   content:"";
   position:absolute;
   left:50%;
-  top:-160px;
+  top:-140px;
   transform:translateX(-50%);
+
+  width:0;
+  height:0;
   border-left:10px solid transparent;
   border-right:10px solid transparent;
   border-bottom:20px solid #ff4f8b;
 }
 
+/* 按鈕 */
 button{
   margin-top:20px;
   padding:12px 25px;
@@ -107,6 +112,8 @@ button{
   color:white;
   font-size:16px;
   cursor:pointer;
+  position:relative;
+  z-index:20;
 }
 
 .result{
@@ -123,9 +130,7 @@ button{
 <div class="container">
 
   <div class="wheel" id="wheel"></div>
-
   <div class="labels" id="labels"></div>
-
   <div class="pointer"></div>
 
 </div>
@@ -146,18 +151,17 @@ const results = [
 "⚡ 凶"
 ];
 
-const labels = document.getElementById("labels");
 const wheel = document.getElementById("wheel");
+const labels = document.getElementById("labels");
 
 const angle = 360 / results.length;
 
-/* ⭐ 建立「真正對應扇形」文字 */
+/* ⭐ 正確放字（穩定版） */
 results.forEach((text, i) => {
 
 let div = document.createElement("div");
 div.className = "label";
 
-/* ⭐ 正確貼圓方式 */
 div.style.transform =
 "rotate(" + (i * angle + angle/2) + "deg) translateY(-120px)";
 
@@ -167,8 +171,8 @@ labels.appendChild(div);
 
 });
 
-let spinning = false;
 let rotation = 0;
+let spinning = false;
 let currentIndex = 0;
 
 function spin(){
@@ -176,12 +180,9 @@ function spin(){
 if(spinning) return;
 spinning = true;
 
-/* ⭐ 同時決定「轉盤 + 結果」 */
 currentIndex = Math.floor(Math.random() * results.length);
 
 let slice = 360 / results.length;
-
-/* ⭐ 對準該格 */
 let target = 360 * 3 - (currentIndex * slice + slice/2);
 
 rotation += target;
