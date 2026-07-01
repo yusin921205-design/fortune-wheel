@@ -24,6 +24,7 @@ h1{
   margin:40px auto;
 }
 
+/* ✔ 轉盤 */
 .wheel{
   width:100%;
   height:100%;
@@ -41,13 +42,18 @@ h1{
   );
 }
 
+/* ✔ 指針（完全固定圓心） */
 .pointer{
   position:absolute;
   left:50%;
   top:50%;
   transform:translate(-50%,-50%);
+  width:0;
+  height:0;
+  z-index:10;
 }
 
+/* 圓心點 */
 .pointer::before{
   content:"";
   position:absolute;
@@ -58,12 +64,13 @@ h1{
   transform:translate(-50%,-50%);
 }
 
+/* 箭頭（真正從中心長出） */
 .pointer::after{
   content:"";
   position:absolute;
   left:50%;
   top:50%;
-  transform:translate(-50%,-100px);
+  transform:translate(-50%,-110px);
   width:0;
   height:0;
   border-left:10px solid transparent;
@@ -120,40 +127,46 @@ const wheel = document.getElementById("wheel");
 let size = results.length;
 let angle = 360 / size;
 
-/* ⚠️ 累加旋轉 */
+/* ✔ 固定起始角（關鍵修正） */
+let baseOffset = -angle / 2;
+
+/* ✔ rotation 累加 */
 let rotation = 0;
 let spinning = false;
 
-/* 轉盤停止時的角度 -> 反推 index */
-function getIndexFromRotation(rot){
+/* ✔ 用「真角度」算 index（完全穩） */
+function getIndex(rot){
 
 let normalized = (rot % 360 + 360) % 360;
 
-/* 指針在正上方，所以要反向 */
-let adjusted = (360 - normalized + angle/2) % 360;
+/* 對齊起始 offset */
+let adjusted = (normalized - baseOffset + 360) % 360;
 
 return Math.floor(adjusted / angle);
 
 }
 
-/* 轉動 */
 function spin(){
 
 if(spinning) return;
 spinning = true;
 
-/* 隨機停止角度 */
+/* 轉多圈 */
 let spins = 5 * 360;
-let randomAngle = Math.floor(Math.random() * 360);
 
-rotation += spins + randomAngle;
+/* 隨機停止角 */
+let random = Math.floor(Math.random() * 360);
 
+/* ✔ 累加 */
+rotation += spins + random;
+
+/* 轉盤 */
 wheel.style.transform = `rotate(${rotation}deg)`;
 
-/* 用「畫面結果」決定顯示 */
+/* ✔ 用畫面反推結果 */
 setTimeout(()=>{
 
-let index = getIndexFromRotation(rotation);
+let index = getIndex(rotation);
 
 document.getElementById("result").innerText =
 "今日運勢：" + results[index];
