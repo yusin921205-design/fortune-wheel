@@ -25,7 +25,6 @@ h1{
 }
 
 
-/* 整個轉盤（包含文字一起轉） */
 .wheel{
   width:320px;
   height:320px;
@@ -49,7 +48,6 @@ h1{
 }
 
 
-/* 文字 */
 .text{
   position:absolute;
   width:100%;
@@ -77,14 +75,14 @@ h1{
 }
 
 
-
-/* ===== 修正後指針 ===== */
+/* ⭐ 只修改這裡：箭頭固定圓心 */
 
 .pointer{
 
   position:absolute;
 
   left:50%;
+
   top:50%;
 
   transform:translate(-50%,-50%);
@@ -103,6 +101,7 @@ h1{
   position:absolute;
 
   width:20px;
+
   height:20px;
 
   background:#ff4f8b;
@@ -110,6 +109,7 @@ h1{
   border-radius:50%;
 
   left:0;
+
   top:0;
 
   transform:translate(-50%,-50%);
@@ -117,8 +117,7 @@ h1{
 }
 
 
-
-/* 箭頭往外 */
+/* 箭頭從圓心往外 */
 
 .pointer:after{
 
@@ -128,9 +127,10 @@ h1{
 
   left:-12px;
 
-  top:-150px;
+  top:-175px;
 
   width:0;
+
   height:0;
 
   border-left:12px solid transparent;
@@ -204,7 +204,6 @@ font-size:22px;
 
 <span style="transform:rotate(334deg) translateY(-120px)">⚡ 凶</span>
 
-
 </div>
 
 
@@ -215,6 +214,7 @@ font-size:22px;
 
 
 </div>
+
 
 
 <button onclick="spin()">開始轉運 🍀</button>
@@ -252,12 +252,9 @@ let spinning=false;
 
 function spin(){
 
-
 if(spinning)return;
 
-
 spinning=true;
-
 
 
 let index=Math.floor(Math.random()*results.length);
@@ -266,21 +263,13 @@ let index=Math.floor(Math.random()*results.length);
 let slice=360/results.length;
 
 
-
-let target=
-
-360*5-(index*slice+slice/2);
-
+let target=360*5-(index*slice+slice/2);
 
 
 rotation+=target;
 
 
-
-wheel.style.transform=
-
-"rotate("+rotation+"deg)";
-
+wheel.style.transform="rotate("+rotation+"deg)";
 
 
 setTimeout(()=>{
@@ -297,9 +286,7 @@ spinning=false;
 },3000);
 
 
-
 }
-
 
 
 </script>
