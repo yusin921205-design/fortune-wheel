@@ -23,10 +23,9 @@ h1{
   margin:40px auto;
 }
 
-/* 轉盤 */
+/* ⭐ 轉盤 */
 .wheel{
   width:320px;
-  height:320px;
   height:320px;
   border-radius:50%;
   background:conic-gradient(
@@ -45,7 +44,7 @@ h1{
   z-index:1;
 }
 
-/* 文字 */
+/* ⭐ 文字層 */
 .labels{
   position:absolute;
   width:320px;
@@ -68,7 +67,7 @@ h1{
   color:#333;
 }
 
-/* 指針 */
+/* ⭐ 指針（已修正：真正圓心） */
 .pointer{
   position:absolute;
   left:50%;
@@ -77,6 +76,7 @@ h1{
   z-index:10;
 }
 
+/* 中心點 */
 .pointer::before{
   content:"";
   width:18px;
@@ -89,17 +89,23 @@ h1{
   transform:translate(-50%, -50%);
 }
 
+/* 尖端朝外 */
 .pointer::after{
   content:"";
   position:absolute;
   left:50%;
-  top:-150px;
+  top:-160px;
   transform:translateX(-50%);
+
+  width:0;
+  height:0;
+
   border-left:10px solid transparent;
   border-right:10px solid transparent;
   border-bottom:20px solid #ff4f8b;
 }
 
+/* 按鈕 */
 button{
   margin-top:20px;
   padding:12px 25px;
@@ -148,12 +154,12 @@ const results = [
 "⚡ 凶"
 ];
 
-/* ⭐ 文字 */
 const labels = document.getElementById("labels");
 const wheel = document.getElementById("wheel");
 
 const angle = 360 / results.length;
 
+/* ⭐ 產生文字 */
 results.forEach((text, i) => {
 
 let div = document.createElement("div");
@@ -172,8 +178,6 @@ let spinning = false;
 let rotation = 0;
 
 function spin(){
-
-console.log("spin clicked"); // ⭐ 檢查用
 
 if(spinning) return;
 spinning = true;
