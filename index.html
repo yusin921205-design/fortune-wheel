@@ -168,7 +168,7 @@ wheel.appendChild(seg);
 
 buildWheel();
 
-/* ⭐ 只修這裡（同步指針與結果） */
+/* ⭐ 只修這裡（對齊完全正確版本） */
 function spin(){
 
 if(spinning) return;
@@ -176,14 +176,14 @@ spinning = true;
 
 let index = Math.floor(Math.random() * size);
 
-/* ✔ 關鍵修正：統一基準 */
-let pointerOffset = -90;
+let slice = 360 / size;
 
+/* ✔ 正確對齊公式（唯一版本） */
 let target =
 360 * 5
-- (index * angle)
-- angle/2
-+ pointerOffset;
+- (index * slice)
+- slice / 2
+- 90;
 
 rotation += target;
 
