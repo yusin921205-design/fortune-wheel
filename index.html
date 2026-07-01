@@ -1,1 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>今日運勢轉盤</title>
 
+<style>
+body{
+  font-family: Arial;
+  text-align:center;
+  background:#fff7fb;
+  padding:40px;
+}
+
+h1{
+  color:#ff4f8b;
+}
+
+.wheel{
+  width:220px;
+  height:220px;
+  border-radius:50%;
+  border:8px solid #ff4f8b;
+  margin:40px auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  transition: transform 3s cubic-bezier(.2,.8,.2,1);
+  background:white;
+}
+
+button{
+  padding:12px 25px;
+  border:none;
+  border-radius:30px;
+  background:#ff4f8b;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+}
+
+.result{
+  margin-top:20px;
+  font-size:24px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🎰 今日運勢轉盤</h1>
+
+<div class="wheel" id="wheel">開始</div>
+
+<button onclick="spin()">開始轉運 🍀</button>
+
+<div class="result" id="result"></div>
+
+<script>
+
+const results = [
+"🌟 上上籤",
+"✨ 上籤",
+"🍀 吉",
+"🌿 小吉",
+"🌤 平",
+"🌧 小凶",
+"⚡ 凶"
+];
+
+let spinning = false;
+
+function spin(){
+
+if(spinning) return;
+spinning = true;
+
+let wheel = document.getElementById("wheel");
+let result = document.getElementById("result");
+
+// 隨機旋轉角度
+let deg = 360 * (3 + Math.random() * 3);
+
+wheel.style.transform = "rotate(" + deg + "deg)";
+
+setTimeout(() => {
+
+let r = Math.floor(Math.random() * results.length);
+
+result.innerHTML = "今日運勢：" + results[r];
+wheel.innerHTML = "✨";
+
+spinning = false;
+
+}, 3000);
+
+}
+
+</script>
+
+</body>
+</html>
