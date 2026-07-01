@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>運勢轉盤 PRO</title>
+<title>今日運勢轉盤</title>
 
 <style>
 
@@ -24,35 +24,18 @@ h1{
   margin:40px auto;
 }
 
-/* ===== 轉盤本體 ===== */
+/* 轉盤 */
 .wheel{
-  width:100%;
-  height:100%;
+  width:320px;
+  height:320px;
   border-radius:50%;
   position:absolute;
+  left:0;
+  top:0;
   transition:transform 4s cubic-bezier(.17,.67,.12,.99);
 }
 
-/* 每一格 */
-.segment{
-  position:absolute;
-  width:100%;
-  height:100%;
-  clip-path: polygon(50% 50%, 100% 0, 100% 100%);
-  transform-origin:center;
-}
-
-/* 文字 */
-.label{
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform-origin:0 0;
-  font-size:14px;
-  font-weight:bold;
-}
-
-/* 指針（固定中間） */
+/* 指針（固定12點方向） */
 .pointer{
   position:absolute;
   left:50%;
@@ -75,7 +58,7 @@ h1{
   content:"";
   position:absolute;
   left:-10px;
-  top:-120px;
+  top:-130px;
   width:0;
   height:0;
   border-left:10px solid transparent;
@@ -92,7 +75,6 @@ button{
   background:#ff4f8b;
   color:white;
   font-size:16px;
-  cursor:pointer;
 }
 
 .result{
@@ -105,12 +87,11 @@ button{
 
 <body>
 
-<h1>🎰 運勢轉盤 PRO</h1>
+<h1>🎰 今日運勢轉盤</h1>
 
 <div class="container">
 
   <div class="wheel" id="wheel"></div>
-
   <div class="pointer"></div>
 
 </div>
@@ -121,7 +102,7 @@ button{
 
 <script>
 
-const results = [
+const results=[
 "🌟 上上籤",
 "✨ 上籤",
 "🍀 吉",
@@ -131,7 +112,7 @@ const results = [
 "⚡ 凶"
 ];
 
-const colors = [
+const colors=[
 "#ffe0ec",
 "#ffd6e7",
 "#ffe9b3",
@@ -141,68 +122,62 @@ const colors = [
 "#e0e0ff"
 ];
 
-const wheel = document.getElementById("wheel");
+const wheel=document.getElementById("wheel");
 
-let size = results.length;
-let angle = 360 / size;
-let rotation = 0;
-let spinning = false;
+let size=results.length;
+let angle=360/size;
+let rotation=0;
+let spinning=false;
 
-/* ===== 建立真正扇形（不再用 conic-gradient） ===== */
+/* 建立真正轉盤（conic-gradient改為固定對齊） */
 function buildWheel(){
 
+let gradient="conic-gradient(";
+
 for(let i=0;i<size;i++){
+let start=i*angle;
+let end=(i+1)*angle;
 
-let seg = document.createElement("div");
-seg.className = "segment";
+gradient+=`${colors[i]} ${start}deg ${end}deg`;
 
-seg.style.transform =
-`rotate(${i * angle}deg)`;
-
-seg.style.background = colors[i];
-
-let label = document.createElement("div");
-label.className = "label";
-
-/* 放在每個扇形中間 */
-label.style.transform =
-`rotate(${angle/2}deg) translate(120px,-10px)`;
-
-label.innerText = results[i];
-
-seg.appendChild(label);
-wheel.appendChild(seg);
-
+if(i<size-1) gradient+=",";
 }
+
+gradient+=")";
+
+wheel.style.background=gradient;
 
 }
 
 buildWheel();
 
-/* ===== 轉動 ===== */
+/* ⭐ 核心修正：完全對齊 pointer */
 function spin(){
 
 if(spinning) return;
-spinning = true;
+spinning=true;
 
-let index = Math.floor(Math.random() * size);
+let index=Math.floor(Math.random()*size);
 
-/* ⭐ 精準公式 */
+/* 👉 關鍵：pointer 在 12 點 = -90deg */
+let pointerOffset = -90;
+
+/* 👉 讓「扇形中心」對準 pointer */
 let target =
-360 * 5
-- (index * angle)
-- angle/2;
+360*5
+- (index*angle + angle/2)
++ pointerOffset;
 
-rotation += target;
+rotation+=target;
 
-wheel.style.transform = `rotate(${rotation}deg)`;
+wheel.style.transform=`rotate(${rotation}deg)`;
 
 setTimeout(()=>{
 
 document.getElementById("result").innerText =
-"今日運勢：" + results[index];
+"今日運勢："+results[index];
 
-spinning = false;
+spinning=false;
 
 },4000);
 
