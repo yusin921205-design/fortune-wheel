@@ -24,7 +24,7 @@ h1{
   margin:40px auto;
 }
 
-/* ✔ 轉盤 */
+/* 轉盤 */
 .wheel{
   width:100%;
   height:100%;
@@ -42,7 +42,7 @@ h1{
   );
 }
 
-/* ✔ 文字 */
+/* 文字 */
 .label{
   position:absolute;
   left:50%;
@@ -52,7 +52,7 @@ h1{
   transform-origin:0 0;
 }
 
-/* ✔ 指針真正修正 */
+/* ✔ 指針：改成真正圓心 */
 .pointer{
   position:absolute;
   left:50%;
@@ -61,7 +61,7 @@ h1{
   z-index:10;
 }
 
-/* 圓心 */
+/* 圓心點 */
 .pointer::before{
   content:"";
   position:absolute;
@@ -72,7 +72,7 @@ h1{
   transform:translate(-50%,-50%);
 }
 
-/* ✔ 直接移到圓心（修正重點） */
+/* ✔ 箭頭直接貼圓心（修正） */
 .pointer::after{
   content:"";
   position:absolute;
@@ -137,7 +137,7 @@ let angle = 360 / size;
 let rotation = 0;
 let spinning = false;
 
-/* ✔ 文字 */
+/* 文字 */
 for(let i=0;i<size;i++){
   let label = document.createElement("div");
   label.className = "label";
@@ -149,7 +149,7 @@ for(let i=0;i<size;i++){
   wheel.appendChild(label);
 }
 
-/* ✔ 核心：固定對齊（修正指到≠顯示） */
+/* ✔ 唯一穩定修正：補 half-angle */
 function spin(){
 
 if(spinning) return;
@@ -157,13 +157,16 @@ spinning = true;
 
 let index = Math.floor(Math.random() * size);
 
-/* ✔ 一定轉超過一圈 */
+/* 轉圈 */
 let spins = 5 * 360;
 
-/* ✔ 關鍵對齊公式（唯一穩定版） */
+/* ✔ 關鍵修正：半格對齊 */
+let offset = angle / 2;
+
+/* ✔ 正確停止位置 */
 let target =
 spins +
-(360 - (index * angle + angle/2));
+(360 - (index * angle + offset));
 
 rotation = target;
 
