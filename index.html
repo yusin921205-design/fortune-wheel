@@ -60,7 +60,7 @@ h1{
   font-weight:bold;
   color:#333;
   white-space:nowrap;
-  text-align:center;
+  transform-origin:center;
 }
 
 /* 指針 */
@@ -142,6 +142,7 @@ const results = [
 "⚡ 凶"
 ];
 
+const wheel = document.getElementById("wheel");
 const labels = document.getElementById("labels");
 
 let size = results.length;
@@ -150,7 +151,9 @@ let angle = 360 / size;
 let rotation = 0;
 let spinning = false;
 
-/* ✔ 平均＋置中＋往內一點 */
+/* ✔ 統一半徑 + 平均角度（重點修正） */
+const radius = 92; // ⭐ 這裡控制「字往圓心距離」
+
 for(let i = 0; i < size; i++){
 
   let deg = i * angle + angle / 2;
@@ -159,12 +162,11 @@ for(let i = 0; i < size; i++){
   div.className = "label";
   div.innerText = results[i];
 
-  /* ⭐ 修正核心：
-     - 只 rotate 定位
-     - translate 調整距離（更往內）
-     - 不反轉（避免不整齊） */
+  /* ✔ 標準圓形定位（整齊版） */
   div.style.transform =
-    `rotate(${deg}deg) translate(70px)`;
+    `rotate(${deg}deg)
+     translate(${radius}px)
+     translate(-50%, -50%)`;
 
   labels.appendChild(div);
 }
@@ -176,11 +178,9 @@ if(spinning) return;
 spinning = true;
 
 let spins = 5 * 360;
-
 rotation += spins + Math.floor(Math.random()*360);
 
-document.getElementById("wheel").style.transform =
-`rotate(${rotation}deg)`;
+wheel.style.transform = `rotate(${rotation}deg)`;
 labels.style.transform = `rotate(${rotation}deg)`;
 
 setTimeout(()=>{
