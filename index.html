@@ -42,7 +42,7 @@ h1{
   );
 }
 
-/* 字貼紙層（整體一起轉） */
+/* 字層 */
 .labels{
   position:absolute;
   width:100%;
@@ -150,8 +150,8 @@ let angle = 360 / size;
 let rotation = 0;
 let spinning = false;
 
-/* ⭐ 核心：等角 + 等半徑 + 不超出圓 */
-const radius = 95;
+/* ⭐ 重點：往圓心再內縮 */
+const radius = 85; // ✔ 比之前更內（你要求）
 
 for(let i = 0; i < size; i++){
 
@@ -161,14 +161,14 @@ for(let i = 0; i < size; i++){
   div.className = "label";
   div.innerText = results[i];
 
-  /* ✔ 貼在圓心等角散開（像印上去） */
+  /* ✔ 貼在輪盤上 + 等角分布 */
   div.style.transform =
     `rotate(${deg}deg) translate(${radius}px)`;
 
   labels.appendChild(div);
 }
 
-/* ✔ 整體剛體旋轉（關鍵） */
+/* ✔ 剛體旋轉（整體一體） */
 function spin(){
 
 if(spinning) return;
@@ -177,7 +177,7 @@ spinning = true;
 let spins = 5 * 360;
 rotation += spins + Math.floor(Math.random()*360);
 
-/* 輪盤 + 字 = 一體旋轉 */
+/* 一起轉（關鍵） */
 wheel.style.transform = `rotate(${rotation}deg)`;
 labels.style.transform = `rotate(${rotation}deg)`;
 
