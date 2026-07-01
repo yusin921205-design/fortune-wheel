@@ -42,14 +42,13 @@ h1{
   );
 }
 
-/* ⭐ 文字層（會跟著一起轉） */
+/* 文字層 */
 .labels{
   position:absolute;
   width:100%;
   height:100%;
   z-index:2;
   pointer-events:none;
-  transition:transform 4s cubic-bezier(.2,.8,.2,1);
 }
 
 /* 文字 */
@@ -63,7 +62,7 @@ h1{
   white-space:nowrap;
 }
 
-/* 指針（固定圓心） */
+/* 指針 */
 .pointer{
   position:absolute;
   left:50%;
@@ -151,7 +150,7 @@ let angle = 360 / size;
 let rotation = 0;
 let spinning = false;
 
-/* ✔ 文字：放在每個扇形中心 */
+/* ✔ 文字往圓心靠近（只改這裡） */
 for(let i = 0; i < size; i++){
 
   let deg = i * angle + angle / 2;
@@ -160,14 +159,13 @@ for(let i = 0; i < size; i++){
   div.className = "label";
   div.innerText = results[i];
 
-  /* ⭐ 放到扇形中心點 */
   div.style.transform =
-    `rotate(${deg}deg) translate(110px) rotate(-${deg}deg)`;
+    `rotate(${deg}deg) translate(85px) rotate(-${deg}deg)`;
 
   labels.appendChild(div);
 }
 
-/* ✔ 轉動 */
+/* 轉動 */
 function spin(){
 
 if(spinning) return;
@@ -177,7 +175,6 @@ let spins = 5 * 360;
 
 rotation += spins + Math.floor(Math.random()*360);
 
-/* wheel + labels 一起轉（關鍵） */
 wheel.style.transform = `rotate(${rotation}deg)`;
 labels.style.transform = `rotate(${rotation}deg)`;
 
