@@ -23,7 +23,7 @@ h1{
   margin:40px auto;
 }
 
-/* 轉盤 */
+/* ⭐ 轉盤 */
 .wheel{
   width:320px;
   height:320px;
@@ -41,7 +41,7 @@ h1{
   position:absolute;
 }
 
-/* ⭐ 文字（修正距離） */
+/* ⭐ 文字（再往外） */
 .labels{
   position:absolute;
   width:320px;
@@ -62,7 +62,7 @@ h1{
   color:#333;
 }
 
-/* ⭐ 指針（中心軸版本） */
+/* ⭐ 指針（真正放在圓心） */
 .pointer{
   position:absolute;
   left:50%;
@@ -84,12 +84,12 @@ h1{
   transform:translate(-50%, -50%);
 }
 
-/* ⭐ 尖端朝外（往上） */
+/* ⭐ 尖端朝外 */
 .pointer::after{
   content:"";
   position:absolute;
   left:50%;
-  top:-140px;
+  top:-150px;   /* 👉 稍微拉長更像指針 */
   transform:translateX(-50%);
 
   width:0;
@@ -128,6 +128,7 @@ button{
 
   <div class="labels" id="labels"></div>
 
+  <!-- ⭐ 中心指針 -->
   <div class="pointer"></div>
 
 </div>
@@ -151,7 +152,7 @@ const results = [
 const labels = document.getElementById("labels");
 const angle = 360 / results.length;
 
-/* ⭐ 文字修正：往外一點 */
+/* ⭐ 文字：再往外一點 */
 results.forEach((text, i) => {
 
 let div = document.createElement("div");
@@ -159,8 +160,8 @@ div.className = "label";
 
 div.style.transform = `
 rotate(${i * angle + angle/2}deg)
-translateY(-100px)
-`;
+translateY(-120px)
+`; /* 👈 原本100 → 改120（往外移） */
 
 div.innerHTML = text;
 
