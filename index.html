@@ -24,6 +24,7 @@ h1{
   margin:40px auto;
 }
 
+/* 轉盤 */
 .wheel{
   width:100%;
   height:100%;
@@ -41,7 +42,7 @@ h1{
   );
 }
 
-/* ✔ 文字往圓內 */
+/* 文字 */
 .label{
   position:absolute;
   left:50%;
@@ -51,7 +52,7 @@ h1{
   transform-origin:0 0;
 }
 
-/* ✔ 指針固定圓心 */
+/* ✔ 真正中心箭頭 */
 .pointer{
   position:absolute;
   left:50%;
@@ -60,7 +61,8 @@ h1{
   z-index:10;
 }
 
-.pointer:before{
+/* 圓心點 */
+.pointer::before{
   content:"";
   position:absolute;
   width:18px;
@@ -70,12 +72,13 @@ h1{
   transform:translate(-50%,-50%);
 }
 
-/* ✔ 尖端在圓心 */
-.pointer:after{
+/* 箭頭（完全對準圓心） */
+.pointer::after{
   content:"";
   position:absolute;
-  left:-10px;
-  top:-110px;
+  left:0;
+  top:0;
+  transform:translate(-50%,-120px);
   width:0;
   height:0;
   border-left:10px solid transparent;
@@ -136,20 +139,19 @@ let angle = 360 / size;
 let rotation = 0;
 let spinning = false;
 
-/* 建立文字 */
+/* 文字 */
 for(let i=0;i<size;i++){
   let label = document.createElement("div");
   label.className = "label";
   label.innerText = results[i];
 
-  /* ✔ 往圓內移動 */
   label.style.transform =
     `rotate(${i * angle + angle/2}deg) translate(90px)`;
 
   wheel.appendChild(label);
 }
 
-/* ✔ 對齊修正 */
+/* ✔ 修正1：會累加轉圈 */
 function spin(){
 
 if(spinning) return;
@@ -157,11 +159,14 @@ spinning = true;
 
 let index = Math.floor(Math.random() * size);
 
-let target =
-360 * 5
-- (index * angle + angle/2);
+/* ✔ 每次至少多轉5圈 */
+let extraSpins = 5 * 360;
 
-rotation = target;
+let target =
+extraSpins +
+(360 - (index * angle + angle/2));
+
+rotation += target;
 
 wheel.style.transform = `rotate(${rotation}deg)`;
 
