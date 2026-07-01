@@ -52,7 +52,7 @@ h1{
   transform-origin:0 0;
 }
 
-/* 指針（真正圓心） */
+/* ✔ 真正圓心 */
 .pointer{
   position:absolute;
   left:50%;
@@ -61,6 +61,7 @@ h1{
   z-index:10;
 }
 
+/* 中心點 */
 .pointer::before{
   content:"";
   position:absolute;
@@ -71,12 +72,13 @@ h1{
   transform:translate(-50%,-50%);
 }
 
+/* ✔ 箭頭真正貼圓心（不再用 -120） */
 .pointer::after{
   content:"";
   position:absolute;
-  left:0;
-  top:0;
-  transform:translate(-50%,-100px);
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-110px);
   width:0;
   height:0;
   border-left:10px solid transparent;
@@ -132,6 +134,8 @@ const wheel = document.getElementById("wheel");
 
 let size = results.length;
 let angle = 360 / size;
+
+/* ✔ 修正核心：累加 rotation */
 let rotation = 0;
 let spinning = false;
 
@@ -147,7 +151,7 @@ for(let i=0;i<size;i++){
   wheel.appendChild(label);
 }
 
-/* ✔ 核心修正（唯一穩定版） */
+/* ✔ 轉動 + 一定超過一圈 + 正確對齊 */
 function spin(){
 
 if(spinning) return;
@@ -155,20 +159,21 @@ spinning = true;
 
 let index = Math.floor(Math.random() * size);
 
-/* 👉 先轉很多圈 */
-let spin = 5 * 360;
+/* ✔ 至少 5 圈 */
+let spins = 5 * 360;
 
-/* 👉 目標停止角（只控制視覺） */
-rotation += spin;
+/* ✔ 半格修正（關鍵） */
+let offset = angle / 2;
 
-/* 👉 讓輪盤停在正確區塊 */
-let stopAngle = index * angle;
+/* ✔ 正確停止位置 */
+let target =
+spins +
+(360 - (index * angle + offset));
 
-rotation += stopAngle;
+rotation += target;
 
-wheel.style.transform = `rotate(${-rotation}deg)`;
+wheel.style.transform = `rotate(${rotation}deg)`;
 
-/* ✔ 顯示一定跟 index 一致 */
 setTimeout(()=>{
 
 document.getElementById("result").innerText =
