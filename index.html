@@ -41,6 +41,7 @@ h1{
   );
 }
 
+/* ✔ 文字 */
 .labels{
   position:absolute;
   width:100%;
@@ -57,10 +58,6 @@ h1{
   font-weight:bold;
   color:#333;
   transform-origin:0 0;
-
-  /* ✔ 修正：讓字「貼扇形走」 */
-  text-align:center;
-  white-space:nowrap;
 }
 
 /* 指針 */
@@ -140,7 +137,6 @@ const results = [
 "⚡ 凶"
 ];
 
-const wheel = document.getElementById("wheel");
 const labels = document.getElementById("labels");
 
 let size = results.length;
@@ -149,16 +145,21 @@ let angle = 360 / size;
 let rotation = 0;
 let spinning = false;
 
-/* ✔ 文字貼扇形修正版 */
+/* ✔ 正確貼扇形（這版才是真的） */
 for(let i=0;i<size;i++){
-  let div = document.createElement("div");
-  div.className = "label";
-  div.innerText = results[i];
 
-  div.style.transform =
-    `rotate(${i * angle + angle/2}deg) translate(110px) rotate(${-(i * angle + angle/2)}deg)`;
+let deg = i * angle + angle/2;
 
-  labels.appendChild(div);
+let div = document.createElement("div");
+div.className = "label";
+div.innerText = results[i];
+
+/* ✔ 核心：3步定位 */
+div.style.transform =
+  `rotate(${deg}deg) translate(110px) rotate(${-deg}deg)`;
+
+labels.appendChild(div);
+
 }
 
 function getIndex(rot){
@@ -176,7 +177,8 @@ let spins = 5 * 360;
 
 rotation += spins + Math.floor(Math.random()*360);
 
-wheel.style.transform = `rotate(${rotation}deg)`;
+document.getElementById("wheel").style.transform =
+`rotate(${rotation}deg)`;
 
 setTimeout(()=>{
 
