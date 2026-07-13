@@ -1,187 +1,386 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hant">
 <head>
-<meta charset="utf-8">
-<title>宇宙行動建議</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#fff7fb">
+  <title>宇宙行動建議</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #352c3b;
+      --muted: #776c7c;
+      --accent: #f54782;
+      --accent-dark: #d92d68;
+      --surface: rgba(255, 255, 255, .78);
+      --shadow: 0 24px 70px rgba(124, 68, 102, .16);
+    }
 
-<style>
+    * { box-sizing: border-box; }
 
-body{
-  font-family:Arial;
-  text-align:center;
-  background:#fff7fb;
-  padding:40px;
-}
+    html { min-height: 100%; }
 
-.container{
-  width:320px;
-  height:320px;
-  margin:40px auto;
-  position:relative;
-}
+    body {
+      min-height: 100vh;
+      min-height: 100svh;
+      margin: 0;
+      padding: clamp(20px, 4vw, 48px) 16px;
+      display: grid;
+      place-items: center;
+      overflow-x: hidden;
+      font-family: Inter, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 16% 14%, rgba(255, 188, 218, .36), transparent 24rem),
+        radial-gradient(circle at 86% 80%, rgba(189, 201, 255, .32), transparent 26rem),
+        linear-gradient(145deg, #fff9fc 0%, #fff1f8 48%, #f7f4ff 100%);
+    }
 
-.wheel{
-  width:100%;
-  height:100%;
-  border-radius:50%;
-  position:absolute;
-  transition:transform 4s cubic-bezier(.2,.8,.2,1);
+    body::before,
+    body::after {
+      content: "✦";
+      position: fixed;
+      z-index: -1;
+      color: rgba(245, 71, 130, .18);
+      font-size: clamp(90px, 13vw, 190px);
+      line-height: 1;
+    }
 
-  background: conic-gradient(
-    #ffe0ec 0% 14.28%,
-    #ffd6e7 14.28% 28.56%,
-    #ffe9b3 28.56% 42.84%,
-    #d6f5d6 42.84% 57.12%,
-    #d6e6ff 57.12% 71.4%,
-    #ffd1d1 71.4% 85.68%,
-    #e0e0ff 85.68% 100%
-  );
-}
+    body::before { top: 4%; left: 3%; transform: rotate(18deg); }
+    body::after { right: 4%; bottom: 1%; transform: rotate(-12deg); }
 
-/* 數字 */
-.num{
-  position:absolute;
-  font-size:22px;
-  font-weight:bold;
-  color:#333;
-  transform: translate(-50%,-50%);
-}
+    main {
+      width: min(100%, 720px);
+      padding: clamp(22px, 4.5vw, 42px) clamp(14px, 4vw, 38px) clamp(26px, 5vw, 44px);
+      text-align: center;
+      background: var(--surface);
+      border: 1px solid rgba(255, 255, 255, .9);
+      border-radius: clamp(26px, 5vw, 42px);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
 
-/* ⭐ 指針（已固定圓心） */
-.pointer{
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  z-index:999;
-  pointer-events:none;
-}
+    .eyebrow {
+      margin: 0 0 6px;
+      color: var(--accent-dark);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .2em;
+    }
 
-/* 圓心點 */
-.pointer::before{
-  content:"";
-  position:absolute;
-  width:16px;
-  height:16px;
-  background:#ff4f8b;
-  border-radius:50%;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-}
+    h1 {
+      margin: 0;
+      font-size: clamp(28px, 5vw, 44px);
+      line-height: 1.18;
+      letter-spacing: -.035em;
+    }
 
-/* 指針 */
-.pointer::after{
-  content:"";
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-130%);
-  width:0;
-  height:0;
-  border-left:10px solid transparent;
-  border-right:10px solid transparent;
-  border-bottom:25px solid #ff4f8b;
-}
+    .intro {
+      margin: 10px auto 0;
+      color: var(--muted);
+      font-size: clamp(14px, 2.6vw, 17px);
+      line-height: 1.6;
+    }
 
-button{
-  margin-top:20px;
-  padding:12px 25px;
-  border:none;
-  border-radius:30px;
-  background:#ff4f8b;
-  color:white;
-  font-size:16px;
-}
+    .wheel-stage {
+      position: relative;
+      width: min(88vw, 540px);
+      max-width: 100%;
+      aspect-ratio: 1;
+      margin: clamp(24px, 4vw, 34px) auto 18px;
+      filter: drop-shadow(0 18px 24px rgba(105, 68, 93, .2));
+    }
 
-.result{
-  margin-top:20px;
-  font-size:20px;
-}
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+    }
 
-</style>
+    .pointer {
+      position: absolute;
+      z-index: 3;
+      top: -11px;
+      left: 50%;
+      width: clamp(38px, 8vw, 54px);
+      height: clamp(48px, 9vw, 64px);
+      transform: translateX(-50%);
+      pointer-events: none;
+      filter: drop-shadow(0 5px 5px rgba(115, 30, 68, .25));
+    }
+
+    .pointer::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #ff6fa0, var(--accent-dark));
+      border: 4px solid #fff;
+    }
+
+    .pointer::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: clamp(12px, 2.8vw, 18px) solid transparent;
+      border-right: clamp(12px, 2.8vw, 18px) solid transparent;
+      border-top: clamp(28px, 5.5vw, 38px) solid var(--accent-dark);
+    }
+
+    .hub {
+      position: absolute;
+      z-index: 2;
+      left: 50%;
+      top: 50%;
+      width: clamp(42px, 9vw, 62px);
+      aspect-ratio: 1;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: linear-gradient(145deg, #fff, #ffd4e4);
+      border: 5px solid rgba(255, 255, 255, .94);
+      box-shadow: 0 5px 14px rgba(99, 53, 82, .22);
+      pointer-events: none;
+    }
+
+    button {
+      min-height: 54px;
+      margin-top: 4px;
+      padding: 14px clamp(24px, 5vw, 38px);
+      border: 0;
+      border-radius: 999px;
+      color: #fff;
+      background: linear-gradient(135deg, #ff6599, var(--accent));
+      box-shadow: 0 10px 24px rgba(245, 71, 130, .3);
+      font: inherit;
+      font-size: clamp(15px, 2.8vw, 18px);
+      font-weight: 800;
+      letter-spacing: .02em;
+      cursor: pointer;
+      transition: transform .2s ease, box-shadow .2s ease, opacity .2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(245, 71, 130, .36);
+    }
+
+    button:active:not(:disabled) { transform: translateY(1px) scale(.99); }
+    button:disabled { cursor: wait; opacity: .7; }
+    button:focus-visible { outline: 4px solid rgba(245, 71, 130, .24); outline-offset: 4px; }
+
+    .result {
+      width: min(100%, 560px);
+      min-height: 72px;
+      margin: 20px auto 0;
+      padding: 16px 20px;
+      display: grid;
+      place-items: center;
+      border-radius: 20px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, .64);
+      border: 1px solid rgba(245, 71, 130, .12);
+      font-size: clamp(15px, 2.8vw, 18px);
+      line-height: 1.55;
+      transition: color .25s ease, background .25s ease, transform .25s ease;
+    }
+
+    .result.has-result {
+      color: var(--ink);
+      background: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 9px 26px rgba(95, 55, 79, .09);
+    }
+
+    .result strong { color: var(--accent-dark); }
+
+    @media (max-height: 760px) and (min-width: 560px) {
+      body { padding-block: 16px; }
+      main { padding-block: 20px 24px; }
+      .wheel-stage { width: min(62vh, 500px); margin-block: 18px 12px; }
+      .intro { margin-top: 5px; }
+      .result { min-height: 58px; margin-top: 12px; padding-block: 10px; }
+    }
+
+    @media (max-width: 420px) {
+      body { padding-inline: 10px; }
+      main { border-radius: 28px; }
+      .wheel-stage { width: min(91vw, 430px); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
 </head>
-
 <body>
+  <main>
+    <p class="eyebrow">A MESSAGE FOR YOU</p>
+    <h1>🌌 宇宙行動建議</h1>
+    <p class="intro">在心裡想好一個問題，讓宇宙給你今天的提示。</p>
 
-<h1>🌌 宇宙行動建議</h1>
+    <div class="wheel-stage" aria-label="七個選項的行動建議轉盤">
+      <canvas id="wheel" role="img" aria-label="標示數字一到七的轉盤"></canvas>
+      <div class="pointer" aria-hidden="true"></div>
+      <div class="hub" aria-hidden="true"></div>
+    </div>
 
-<div class="container">
-  <div class="wheel" id="wheel"></div>
-  <div class="pointer"></div>
-</div>
+    <button id="spinButton" type="button">想好了，接收宇宙訊號</button>
+    <div class="result" id="result" role="status" aria-live="polite">
+      點擊按鈕，答案會停在指針正中央。
+    </div>
+  </main>
 
-<button onclick="spin()">想好問題後　按此按鈕來接收訊號</button>
+  <script>
+    const messages = [
+      "先不要急著下結論。",
+      "今天適合觀察。",
+      "有些事晚一點會更清楚。",
+      "留一點空間給變化。",
+      "不需要現在做決定。",
+      "有些答案會在你放鬆時浮現。",
+      "現在的停頓，其實是在整理方向。"
+    ];
 
-<div class="result" id="result"></div>
+    const colors = ["#ffe0ec", "#ffd6e7", "#ffe9b3", "#d6f5d6", "#d6e6ff", "#ffd1d1", "#e0e0ff"];
+    const canvas = document.getElementById("wheel");
+    const context = canvas.getContext("2d");
+    const button = document.getElementById("spinButton");
+    const result = document.getElementById("result");
+    const segmentCount = messages.length;
+    const segmentAngle = Math.PI * 2 / segmentCount;
+    const topAngle = -Math.PI / 2;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-<script>
+    let rotation = 0;
+    let spinning = false;
+    let logicalSize = 0;
 
-/* 宇宙行動建議內容 */
-const messages = {
-1:"今日建議：先不要急著下結論",
-2:"今日建議：今天適合觀察",
-3:"今日建議：有些事晚一點會更清楚",
-4:"今日建議：留一點空間給變化",
-5:"今日建議：不需要現在做決定",
-6:"今日建議：有些答案會在你放鬆時浮現",
-7:"今日建議：現在的停頓其實在整理方向"
-};
+    function drawWheel() {
+      const size = logicalSize;
+      if (!size) return;
 
-const wheel = document.getElementById("wheel");
+      const center = size / 2;
+      const radius = center - Math.max(7, size * .018);
+      context.clearRect(0, 0, size, size);
 
-let size = 7;
-let angle = 360 / size;
+      context.save();
+      context.beginPath();
+      context.arc(center, center, radius, 0, Math.PI * 2);
+      context.fillStyle = "#fff";
+      context.shadowColor = "rgba(79, 43, 67, .18)";
+      context.shadowBlur = size * .04;
+      context.fill();
+      context.restore();
 
-const radius = 95;
+      for (let index = 0; index < segmentCount; index += 1) {
+        const start = topAngle + rotation + index * segmentAngle;
+        const end = start + segmentAngle;
+        const middle = start + segmentAngle / 2;
 
-/* 建立數字 */
-for(let i = 0; i < size; i++){
+        context.beginPath();
+        context.moveTo(center, center);
+        context.arc(center, center, radius, start, end);
+        context.closePath();
+        context.fillStyle = colors[index];
+        context.fill();
 
-  let deg = i * angle + angle / 2;
-  let rad = deg * Math.PI / 180;
+        context.beginPath();
+        context.moveTo(center, center);
+        context.lineTo(center + Math.cos(start) * radius, center + Math.sin(start) * radius);
+        context.strokeStyle = "rgba(255, 255, 255, .72)";
+        context.lineWidth = Math.max(2, size * .006);
+        context.stroke();
 
-  let x = 160 + Math.cos(rad) * radius;
-  let y = 160 + Math.sin(rad) * radius;
+        const textRadius = radius * .67;
+        const x = center + Math.cos(middle) * textRadius;
+        const y = center + Math.sin(middle) * textRadius;
+        context.fillStyle = "#352c3b";
+        context.font = `800 ${Math.round(size * .075)}px Inter, "Noto Sans TC", sans-serif`;
+        context.textAlign = "center";
+        context.textBaseline = "middle";
+        context.fillText(String(index + 1), x, y);
+      }
 
-  let num = document.createElement("div");
-  num.className = "num";
-  num.innerText = i + 1;
+      context.beginPath();
+      context.arc(center, center, radius, 0, Math.PI * 2);
+      context.strokeStyle = "rgba(255, 255, 255, .9)";
+      context.lineWidth = Math.max(6, size * .016);
+      context.stroke();
+    }
 
-  num.style.left = x + "px";
-  num.style.top = y + "px";
+    function resizeCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      const nextSize = Math.round(rect.width);
+      if (!nextSize) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(nextSize * dpr);
+      canvas.height = Math.round(nextSize * dpr);
+      context.setTransform(dpr, 0, 0, dpr, 0, 0);
+      logicalSize = nextSize;
+      drawWheel();
+    }
 
-  wheel.appendChild(num);
-}
+    function normalizeAngle(value) {
+      const fullTurn = Math.PI * 2;
+      return ((value % fullTurn) + fullTurn) % fullTurn;
+    }
 
-let rotation = 0;
-let spinning = false;
+    function easeOutQuint(value) {
+      return 1 - Math.pow(1 - value, 5);
+    }
 
-function spin(){
+    function spin() {
+      if (spinning) return;
+      spinning = true;
+      button.disabled = true;
+      button.textContent = "宇宙正在回應…";
+      result.classList.remove("has-result");
+      result.textContent = "訊號接收中，請稍候…";
 
-if(spinning) return;
-spinning = true;
+      const selectedIndex = Math.floor(Math.random() * segmentCount);
+      const selectedCenter = (selectedIndex + .5) * segmentAngle;
+      const desiredRotation = normalizeAngle(-selectedCenter);
+      const currentNormalized = normalizeAngle(rotation);
+      const alignment = normalizeAngle(desiredRotation - currentNormalized);
+      const fullTurns = reduceMotion.matches ? 0 : 6;
+      const targetRotation = rotation + fullTurns * Math.PI * 2 + alignment;
+      const startRotation = rotation;
+      const duration = reduceMotion.matches ? 50 : 4200;
+      const startTime = performance.now();
 
-/* 隨機結果 */
-let resultIndex = Math.floor(Math.random()*7) + 1;
+      function animate(now) {
+        const progress = Math.min((now - startTime) / duration, 1);
+        rotation = startRotation + (targetRotation - startRotation) * easeOutQuint(progress);
+        drawWheel();
 
-/* 轉動 */
-rotation += 1800 + (resultIndex-1) * angle;
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+          return;
+        }
 
-wheel.style.transform = `rotate(${rotation}deg)`;
+        rotation = desiredRotation;
+        drawWheel();
+        result.innerHTML = `<span><strong>宇宙給你的訊息：</strong>${messages[selectedIndex]}</span>`;
+        result.classList.add("has-result");
+        button.disabled = false;
+        button.textContent = "再接收一次訊號";
+        spinning = false;
+      }
 
-setTimeout(()=>{
+      requestAnimationFrame(animate);
+    }
 
-document.getElementById("result").innerText =
-messages[resultIndex];
-
-spinning = false;
-
-},4000);
-
-}
-
-</script>
-
+    button.addEventListener("click", spin);
+    window.addEventListener("resize", resizeCanvas, { passive: true });
+    resizeCanvas();
+  </script>
 </body>
 </html>
